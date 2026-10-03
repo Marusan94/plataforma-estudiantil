@@ -9,6 +9,7 @@ import BienestarView from './components/BienestarView';
 import FamiliarView from './components/FamiliarView';
 import RegistroView from './components/RegistroView';
 import CommercialLoginView from './components/CommercialLoginView';
+import PublicPortfolio from './components/PublicPortfolio';
 import NewsSlider from './components/NewsSlider';
 import CopilotWidget from './components/CopilotWidget';
 
@@ -57,6 +58,8 @@ export default function App() {
         return <FamiliarView currentRole={currentRole} />;
       case 'registro':
         return <RegistroView onUserCreated={() => setActiveTab('dashboard')} />;
+      case 'portfolio':
+        return <PublicPortfolio />;
       default:
         return <DashboardView currentRole={currentRole} />;
     }

@@ -22,15 +22,16 @@ export default function Navbar({ currentRole, onRoleChange, activeTab, onTabChan
     { id: 'asistencia', label: 'Asistencia' },
     { id: 'bienestar', label: 'Bienestar' },
     { id: 'familiar', label: 'Familiar' },
-    { id: 'registro', label: 'Registro' }
+    { id: 'registro', label: 'Registro' },
+    { id: 'portfolio', label: 'Portafolio' }
   ];
 
   const roleTabs = {
-    ESTUDIANTE: ['dashboard', 'lab-digital', 'hoja-vida', 'academico', 'asistencia', 'bienestar'],
-    DOCENTE: ['dashboard', 'lab-digital', 'academico', 'asistencia', 'bienestar', 'registro'],
-    FAMILIAR: ['dashboard', 'familiar', 'bienestar'],
-    BIENESTAR: ['dashboard', 'bienestar', 'asistencia', 'registro'],
-    ADMIN: ['dashboard', 'lab-digital', 'hoja-vida', 'academico', 'asistencia', 'bienestar', 'familiar', 'registro']
+    ESTUDIANTE: ['dashboard', 'lab-digital', 'hoja-vida', 'academico', 'asistencia', 'bienestar', 'portfolio'],
+    DOCENTE: ['dashboard', 'lab-digital', 'academico', 'asistencia', 'bienestar', 'registro', 'portfolio'],
+    FAMILIAR: ['dashboard', 'familiar', 'bienestar', 'portfolio'],
+    BIENESTAR: ['dashboard', 'bienestar', 'asistencia', 'registro', 'portfolio'],
+    ADMIN: ['dashboard', 'lab-digital', 'hoja-vida', 'academico', 'asistencia', 'bienestar', 'familiar', 'registro', 'portfolio']
   };
 
   const tabs = allTabs.filter(t => roleTabs[currentRole]?.includes(t.id));

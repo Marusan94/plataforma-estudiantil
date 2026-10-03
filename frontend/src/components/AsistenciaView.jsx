@@ -1,15 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { getAsistenciasGrupo, registrarAsistenciaLote } from '../services/api';
+import { getAsistenciasGrupo, registrarAsistenciaLote, getPerfilEstudiante } from '../services/api';
 
 export default function AsistenciaView({ currentRole }) {
   const [selectedFecha, setSelectedFecha] = useState('2026-03-03');
   const [asistencias, setAsistencias] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [estudianteId, setEstudianteId] = useState(null);
 
   useEffect(() => {
+    if (currentRole === 'ESTUDIANTE') {
+      loadEstudianteId();
+    }
     loadAsistencia();
-  }, [selectedFecha]);
+  }, [selectedFecha, currentRole]);
+
+  const loadEstudianteId = async () => {
+    const perfil = await getPerfilEstudiante(1);
+    setEstudianteId(perfil.estudianteId || perfil.id);
+  };
 
   const loadAsistencia = async () => {
     setLoading(true);
@@ -56,6 +65,14 @@ export default function AsistenciaView({ currentRole }) {
     setTimeout(() => setSaveSuccess(false), 3000);
   };
 
+  // Filter attendance for students - show only their own
+  const filteredAsistencias = currentRole === 'ESTUDIANTE' && estudianteId
+    ? asistencias.filter(a => a.estudianteId === estudianteId)
+    : asistencias;
+
+  // Show teacher/admin view with full group roster
+  const showGroupRoster = currentRole !== 'ESTUDIANTE';
+
   if (loading) {
     return (
       <div className="flat-panel">
@@ -73,7 +90,7 @@ export default function AsistenciaView({ currentRole }) {
         </div>
       )}
 
-      {/* Student Global Attendance (HUAS2) */}
+      {/* Student Global Attendance (HUAS2) - Always show for all roles */}
       <div className="flat-panel">
         <div className="flat-panel-header">
           <div>
@@ -133,12 +150,19 @@ export default function AsistenciaView({ currentRole }) {
         </div>
       </div>
 
-      {/* Daily Attendance Roster (HUAS1) */}
+      {/* Daily Attendance - Different views based on role */}
       <div className="flat-panel">
         <div className="flat-panel-header">
           <div>
-            <div style={{ fontSize: 13.5, fontWeight: 700 }}>Planilla Diaria de Asistencia del Grupo (HUAS1)</div>
-            <div style={{ fontSize: 11.5, color: 'var(--mute)' }}>Grupo: G-WEB-01 • Asignatura: Desarrollo Web Full Stack</div>
+            <div style={{ fontSize: 13.5, fontWeight: 700 }}>
+              {showGroupRoster ? 'Planilla Diaria de Asistencia del Grupo (HUAS1)' : 'Mi Asistencia del Día (HUAS1)'}
+            </div>
+            <div style={{ fontSize: 11.5, color: 'var(--mute)' }}>
+              {showGroupRoster 
+                ? 'Grupo: G-WEB-01 • Asignatura: Desarrollo Web Full Stack' 
+                : `Mi registro personal • Grupo: G-WEB-01 • Asignatura: Desarrollo Web Full Stack`
+              }
+            </div>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -156,63 +180,83 @@ export default function AsistenciaView({ currentRole }) {
           <table className="terminal-table">
             <thead>
               <tr>
-                <th>ID</th>
+                {showGroupRoster && <th>ID</th>}
                 <th>Estudiante</th>
                 <th>Estado de Asistencia</th>
                 <th>Observaciones</th>
               </tr>
             </thead>
             <tbody>
-              {asistencias.map(a => (
+              {filteredAsistencias.map(a => (
                 <tr key={a.estudianteId}>
-                  <td style={{ color: 'var(--mute)' }}>EST-{a.estudianteId}</td>
-                  <td style={{ fontWeight: 600, color: 'var(--ink)' }}>{a.nombreEstudiante}</td>
-                  <td>
-                    <div style={{ display: 'flex', gap: 6 }}>
-                      <button
-                        type="button"
-                        onClick={() => handleStateToggle(a.estudianteId, 'PRESENTE')}
-                        className={`btn-cli btn-cli-sm ${a.estado === 'PRESENTE' ? 'btn-cli-primary' : 'btn-cli-secondary'}`}
-                      >
-                        Presente
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => handleStateToggle(a.estudianteId, 'AUSENTE')}
-                        style={{
-                          borderColor: a.estado === 'AUSENTE' ? 'var(--danger)' : 'var(--hairline)',
-                          color: a.estado === 'AUSENTE' ? '#fff' : 'var(--danger)',
-                          background: a.estado === 'AUSENTE' ? 'var(--danger)' : 'transparent'
-                        }}
-                        className="btn-cli btn-cli-sm"
-                      >
-                        Ausente
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => handleStateToggle(a.estudianteId, 'JUSTIFICADO')}
-                        style={{
-                          borderColor: a.estado === 'JUSTIFICADO' ? 'var(--warning)' : 'var(--hairline)',
-                          color: a.estado === 'JUSTIFICADO' ? '#fff' : 'var(--warning)',
-                          background: a.estado === 'JUSTIFICADO' ? 'var(--warning)' : 'transparent'
-                        }}
-                        className="btn-cli btn-cli-sm"
-                      >
-                        Justificado
-                      </button>
-                    </div>
+                  {showGroupRoster && (
+                    <td style={{ color: 'var(--mute)' }}>EST-{a.estudianteId}</td>
+                  )}
+                  <td style={{ fontWeight: 600, color: 'var(--ink)' }}>
+                    {a.nombreEstudiante}
+                    {currentRole === 'ESTUDIANTE' && <span className="badge-status badge-success" style={{ marginLeft: 8, fontSize: 10 }}>Yo</span>}
                   </td>
                   <td>
-                    <input 
-                      type="text"
-                      placeholder="Observaciones..."
-                      value={a.observaciones || ''}
-                      onChange={(e) => handleObservacionChange(a.estudianteId, e.target.value)}
-                      className="cli-input"
-                      style={{ padding: '5px 8px', fontSize: 12 }}
-                    />
+                    {showGroupRoster ? (
+                      <div style={{ display: 'flex', gap: 6 }}>
+                        <button
+                          type="button"
+                          onClick={() => handleStateToggle(a.estudianteId, 'PRESENTE')}
+                          className={`btn-cli btn-cli-sm ${a.estado === 'PRESENTE' ? 'btn-cli-primary' : 'btn-cli-secondary'}`}
+                        >
+                          Presente
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => handleStateToggle(a.estudianteId, 'AUSENTE')}
+                          style={{
+                            borderColor: a.estado === 'AUSENTE' ? 'var(--danger)' : 'var(--hairline)',
+                            color: a.estado === 'AUSENTE' ? '#fff' : 'var(--danger)',
+                            background: a.estado === 'AUSENTE' ? 'var(--danger)' : 'transparent'
+                          }}
+                          className="btn-cli btn-cli-sm"
+                        >
+                          Ausente
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => handleStateToggle(a.estudianteId, 'JUSTIFICADO')}
+                          style={{
+                            borderColor: a.estado === 'JUSTIFICADO' ? 'var(--warning)' : 'var(--hairline)',
+                            color: a.estado === 'JUSTIFICADO' ? '#fff' : 'var(--warning)',
+                            background: a.estado === 'JUSTIFICADO' ? 'var(--warning)' : 'transparent'
+                          }}
+                          className="btn-cli btn-cli-sm"
+                        >
+                          Justificado
+                        </button>
+                      </div>
+                    ) : (
+                      // Student view - read only display of their status
+                      <span className={`badge-status badge-${a.estado === 'PRESENTE' ? 'success' : a.estado === 'AUSENTE' ? 'danger' : 'warning'}`}>
+                        {a.estado === 'PRESENTE' && '● Presente'}
+                        {a.estado === 'AUSENTE' && '● Ausente'}
+                        {a.estado === 'JUSTIFICADO' && '● Justificado'}
+                      </span>
+                    )}
+                  </td>
+                  <td>
+                    {showGroupRoster ? (
+                      <input 
+                        type="text"
+                        placeholder="Observaciones..."
+                        value={a.observaciones || ''}
+                        onChange={(e) => handleObservacionChange(a.estudianteId, e.target.value)}
+                        className="cli-input"
+                        style={{ padding: '5px 8px', fontSize: 12 }}
+                      />
+                    ) : (
+                      <span style={{ color: 'var(--mute)', fontSize: 12 }}>
+                        {a.observaciones || 'Sin observaciones'}
+                      </span>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -220,11 +264,13 @@ export default function AsistenciaView({ currentRole }) {
           </table>
         </div>
 
-        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 16 }}>
-          <button onClick={handleGuardarLote} className="btn-cli btn-cli-primary">
-            Guardar Planilla de Asistencia
-          </button>
-        </div>
+        {showGroupRoster && (
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 16 }}>
+            <button onClick={handleGuardarLote} className="btn-cli btn-cli-primary">
+              Guardar Planilla de Asistencia
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

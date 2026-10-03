@@ -1,0 +1,420 @@
+import React, { useState, useEffect } from 'react';
+
+const portfolioData = [
+  {
+    id: 1,
+    title: 'E-commerce Educativo',
+    description: 'Plataforma completa con catálogo, carrito, checkout y arquitectura de microservicios. Integración con pasarelas de pago y panel de administración.',
+    technologies: 'React 18, Spring Boot 3, PostgreSQL, Docker, Kubernetes',
+    icon: '🛒',
+    tags: ['Full Stack', 'Microservicios', 'DevOps'],
+    repoUrl: 'https://github.com/santiagoperez/ecommerce-demo',
+    demoUrl: 'https://demo.ecommerce-edu.com'
+  },
+  {
+    id: 2,
+    title: 'Asistencia QR Móvil',
+    description: 'App móvil y web para escaneo rápido de presencia en aula usando códigos QR. Sincronización offline-first con backend.',
+    technologies: 'React Native, Node.js, SQLite, Socket.io',
+    icon: '📱',
+    tags: ['Mobile', 'Real-time', 'Offline-first'],
+    repoUrl: 'https://github.com/santiagoperez/asistencia-qr',
+    demoUrl: null
+  },
+  {
+    id: 3,
+    title: 'Sistema de Calificaciones IA',
+    description: 'Motor de evaluación automática con IA para rúbricas complejas. Feedback personalizado y detección de plagio.',
+    technologies: 'Python, FastAPI, TensorFlow, PostgreSQL, React',
+    icon: '🤖',
+    tags: ['IA/ML', 'NLP', 'EdTech'],
+    repoUrl: 'https://github.com/santiagoperez/grading-ai',
+    demoUrl: 'https://grading-ai.demo.com'
+  },
+  {
+    id: 4,
+    title: 'Lab Digital Interactivo',
+    description: 'Entorno sandbox para retos de código con ejecución en vivo. Soporte multi-lenguaje y validación automática.',
+    technologies: 'React, Monaco Editor, WebAssembly, Node.js',
+    icon: '💻',
+    tags: ['Code Execution', 'WASM', 'Education'],
+    repoUrl: 'https://github.com/santiagoperez/lab-digital',
+    demoUrl: null
+  },
+  {
+    id: 5,
+    title: 'Dashboard Analítico Institucional',
+    description: 'Visualizaciones de retención, rendimiento académico, SLA de bienestar y narrativa de impacto para toma de decisiones.',
+    technologies: 'React, D3.js, Python/Pandas, PostgreSQL',
+    icon: '📊',
+    tags: ['Data Viz', 'Analytics', 'BI'],
+    repoUrl: 'https://github.com/santiagoperez/analytics-dash',
+    demoUrl: 'https://analytics.demo.edu.co'
+  },
+  {
+    id: 6,
+    title: 'Portal Bienestar Estudiantil',
+    description: 'Sistema de tickets con triage automático, SLA por prioridad, seguimientos y alertas tempranas de riesgo académico.',
+    technologies: 'React, Spring Boot, WebSocket, PostgreSQL',
+    icon: '🏥',
+    tags: ['SaaS', 'Real-time', 'Wellness'],
+    repoUrl: 'https://github.com/santiagoperez/wellness-portal',
+    demoUrl: null
+  }
+];
+
+const skills = [
+  { category: 'Frontend', items: ['React 18', 'TypeScript', 'Tailwind CSS', 'Vite', 'Monaco Editor', 'D3.js', 'Framer Motion'] },
+  { category: 'Backend', items: ['Spring Boot 3', 'Java 17', 'Node.js', 'FastAPI', 'PostgreSQL', 'Redis', 'WebSocket'] },
+  { category: 'DevOps', items: ['Docker', 'Kubernetes', 'GitHub Actions', 'AWS', 'Terraform', 'Prometheus', 'Grafana'] },
+  { category: 'IA/ML', items: ['TensorFlow', 'PyTorch', 'Hugging Face', 'LangChain', 'OpenAI API', 'Vector DBs'] },
+  { category: 'Testing', items: ['Jest', 'React Testing Library', 'Cypress', 'Playwright', 'Testcontainers', 'Contract Testing'] },
+  { category: 'Calidad', items: ['SonarQube', 'ESLint', 'Prettier', 'Husky', 'Dependabot', 'CodeQL', 'ArchUnit'] }
+];
+
+const certifications = [
+  { name: 'Oracle Certified Professional: Java SE 17 Developer', issuer: 'Oracle', year: '2025', badge: '🏆' },
+  { name: 'AWS Certified Solutions Architect - Associate', issuer: 'Amazon Web Services', year: '2024', badge: '☁️' },
+  { name: 'Google Cloud Professional Cloud Developer', issuer: 'Google Cloud', year: '2024', badge: '🔷' },
+  { name: 'Meta Front-End Developer Professional Certificate', issuer: 'Meta / Coursera', year: '2025', badge: '📘' },
+  { name: 'Kubernetes Application Developer (CKAD)', issuer: 'CNCF', year: '2023', badge: '⚓' },
+  { name: 'TensorFlow Developer Certificate', issuer: 'Google', year: '2025', badge: '🧠' }
+];
+
+export default function PublicPortfolio() {
+  const [activeFilter, setActiveFilter] = useState('all');
+  const [theme, setTheme] = useState(() => localStorage.getItem('portfolio_theme') || 'lovecraft');
+
+  const allTags = [...new Set(portfolioData.flatMap(p => p.tags))];
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('portfolio_theme', theme);
+    document.body.classList.toggle('lovecraft-bg', theme === 'lovecraft');
+  }, [theme]);
+
+  const filteredProjects = activeFilter === 'all'
+    ? portfolioData
+    : portfolioData.filter(p => p.tags.includes(activeFilter));
+
+  return (
+    <div className="portfolio-root" data-theme={theme}>
+      {theme === 'lovecraft' && (
+        <>
+          <div className="lovecraft-bg" />
+          <div className="scanlines" />
+          <div className="crt-vignette" />
+        </>
+      )}
+
+      <header className="portfolio-header">
+        <div className="portfolio-header-inner">
+          <div className="portfolio-brand">
+            <span className="brand-logo-portfolio" aria-hidden="true">
+              <svg viewBox="0 0 16 16" shapeRendering="crispEdges">
+                <rect x="3" y="1" width="10" height="2" fill="currentColor"/>
+                <rect x="2" y="3" width="12" height="10" fill="#0b1220"/>
+                <rect x="4" y="4" width="8" height="7" fill="#f5ead0"/>
+                <rect x="5" y="6" width="2" height="3" fill="currentColor"/>
+                <rect x="9" y="6" width="2" height="3" fill="currentColor"/>
+                <rect x="5" y="7" width="1" height="1" fill="#202020"/>
+                <rect x="10" y="7" width="1" height="1" fill="#202020"/>
+                <rect x="7" y="9" width="2" height="1" fill="#b45309"/>
+                <rect x="13" y="8" width="2" height="1" fill="#78350f"/>
+                <rect x="13" y="9" width="2" height="3" fill="#fbbf24"/>
+                <rect x="2" y="13" width="12" height="1" fill="currentColor"/>
+              </svg>
+            </span>
+            <div>
+              <h1 className="glitch-text" data-text="SANTIAGO PÉREZ">SANTIAGO PÉREZ</h1>
+              <p className="portfolio-tagline">Desarrollador Full Stack • Arquitecto de Software • Investigador IA</p>
+            </div>
+          </div>
+
+          <div className="portfolio-header-actions">
+            <button
+              onClick={() => setTheme(theme === 'lovecraft' ? 'dark' : 'lovecraft')}
+              className="theme-lovecraft-toggle"
+              aria-label={theme === 'lovecraft' ? 'Modo Normal' : 'Modo Lovecraftiano'}
+            >
+              {theme === 'lovecraft' ? '🌙 NORMAL' : '👁️ LOVECRAFT'}
+            </button>
+            <a
+              href="mailto:santiago.perez@estudiante.edu.co"
+              className="btn-eldritch"
+            >
+              <span className="btn-text">CONTACTO</span>
+            </a>
+            <a
+              href="https://github.com/santiagoperez"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-eldritch void"
+            >
+              <span className="btn-text">GITHUB</span>
+            </a>
+            <a
+              href="https://linkedin.com/in/santiagoperez"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-eldritch miskatonic"
+            >
+              <span className="btn-text">LINKEDIN</span>
+            </a>
+          </div>
+        </div>
+
+        <div className="portfolio-filters">
+          <button
+            className={`portfolio-filter-btn ${activeFilter === 'all' ? 'active' : ''}`}
+            onClick={() => setActiveFilter('all')}
+          >
+            TODOS
+          </button>
+          {allTags.map(tag => (
+            <button
+              key={tag}
+              className={`portfolio-filter-btn ${activeFilter === tag ? 'active' : ''}`}
+              onClick={() => setActiveFilter(tag)}
+            >
+              {tag}
+            </button>
+          ))}
+        </div>
+      </header>
+
+      <main className="portfolio-main">
+        <section className="portfolio-section">
+          <div className="lovecraft-panel">
+            <div className="portfolio-about-grid">
+              <div className="about-main">
+                <h2 className="glitch-text section-title" data-text="SOBRE MÍ">SOBRE MÍ</h2>
+                <p className="about-text">
+                  Estudiante de Ingeniería de Sistemas apasionado por la arquitectura de software limpia,
+                  sistemas distribuidos y la intersección entre IA y educación. Construyo productos que
+                  escalan, aprendo constantemente y comparto conocimiento.
+                </p>
+                <p className="about-text">
+                  Experiencia en desarrollo full-stack con <strong>React</strong>, <strong>Spring Boot</strong>,
+                  <strong>Node.js</strong> y <strong>Python</strong>. Entusiasta de <strong>Kubernetes</strong>,
+                  <strong>arquitectura de microservicios</strong> y <strong>MLOps</strong>.
+                  Contribuidor open-source y mentor en comunidades técnicas.
+                </p>
+
+                <div className="about-stats">
+                  <div className="stat-item">
+                    <span className="stat-value glitch-text" data-text="6+">6+</span>
+                    <span className="stat-label">Proyectos Completados</span>
+                  </div>
+                  <div className="stat-item">
+                    <span className="stat-value glitch-text" data-text="3+">3+</span>
+                    <span className="stat-label">Años Experiencia</span>
+                  </div>
+                  <div className="stat-item">
+                    <span className="stat-value glitch-text" data-text="12+">12+</span>
+                    <span className="stat-label">Tecnologías Dominadas</span>
+                  </div>
+                  <div className="stat-item">
+                    <span className="stat-value glitch-text" data-text="6">6</span>
+                    <span className="stat-label">Certificaciones Cloud/IA</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="about-side">
+                <div className="lovecraft-panel eldritch">
+                  <h3 className="side-title">📍 UBICACIÓN</h3>
+                  <p className="whisper-text">Medellín, Colombia</p>
+                  <p className="whisper-text">Zona Horaria: GMT-5</p>
+                </div>
+
+                <div className="lovecraft-panel void" style={{ marginTop: 16 }}>
+                  <h3 className="side-title">🎯 DISPONIBILIDAD</h3>
+                  <p className="whisper-text">Prácticas / Junior Full Stack</p>
+                  <p className="whisper-text">Remoto / Híbrido / Presencial</p>
+                  <p className="whisper-text">Inicio Inmediato</p>
+                </div>
+
+                <div className="lovecraft-panel" style={{ marginTop: 16 }}>
+                  <h3 className="side-title">🔗 ENLACES RÁPIDOS</h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                    <a href="https://github.com/santiagoperez" target="_blank" rel="noopener" className="whisper-text" style={{ color: 'var(--cthulhu-green-glow)', textDecoration: 'none' }}>▸ GitHub: @santiagoperez</a>
+                    <a href="https://linkedin.com/in/santiagoperez" target="_blank" rel="noopener" className="whisper-text" style={{ color: 'var(--eldritch-purple-glow)', textDecoration: 'none' }}>▸ LinkedIn</a>
+                    <a href="mailto:santiago.perez@estudiante.edu.co" className="whisper-text" style={{ color: 'var(--miskatonic-gold)', textDecoration: 'none' }}>▸ Email</a>
+                    <a href="#" className="whisper-text" style={{ color: 'var(--arkham-red-glow)', textDecoration: 'none' }}>▸ CV Descargar (PDF)</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="portfolio-section">
+          <h2 className="glitch-text section-title" data-text="HABILIDADES">HABILIDADES TÉCNICAS</h2>
+          <div className="skills-grid">
+            {skills.map((skill, i) => (
+              <div key={skill.category} className="lovecraft-panel skill-category" style={{ animationDelay: `${i * 0.1}s` }}>
+                <h3 className="skill-category-title">{skill.category}</h3>
+                <div className="skill-tags">
+                  {skill.items.map(item => (
+                    <span key={item} className="skill-tag">{item}</span>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="portfolio-section">
+          <h2 className="glitch-text section-title" data-text="PROYECTOS">PROYECTOS DESTACADOS</h2>
+          <div className="lovecraft-portfolio-grid">
+            {filteredProjects.map((project, i) => (
+              <article key={project.id} className="lovecraft-portfolio-card corrupted-card" style={{ animationDelay: `${i * 0.1}s` }}>
+                <div className="card-icon">{project.icon}</div>
+                <h3>{project.title}</h3>
+                <p>{project.description}</p>
+                <div className="card-tags">
+                  {project.tags.map(tag => (
+                    <span key={tag} className="card-tag">{tag}</span>
+                  ))}
+                </div>
+                <div style={{ marginTop: 12, paddingTop: 12, borderTop: '1px solid var(--hairline)' }}>
+                  <small className="whisper-text">Stack: {project.technologies}</small>
+                </div>
+                <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
+                  <a href={project.repoUrl} target="_blank" rel="noopener noreferrer" className="btn-eldritch" style={{ padding: '8px 12px', fontSize: '11px' }}>
+                    <span className="btn-text">CÓDIGO</span>
+                  </a>
+                  {project.demoUrl && (
+                    <a href={project.demoUrl} target="_blank" rel="noopener noreferrer" className="btn-eldritch void" style={{ padding: '8px 12px', fontSize: '11px' }}>
+                      <span className="btn-text">DEMO</span>
+                    </a>
+                  )}
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="portfolio-section">
+          <h2 className="glitch-text section-title" data-text="CERTIFICACIONES">CERTIFICACIONES</h2>
+          <div className="artifact-display">
+            {certifications.map((cert, i) => (
+              <div key={cert.name} className="artifact-item lovecraft-panel" style={{ animationDelay: `${i * 0.1}s` }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+                  <span className="cert-badge" style={{ fontSize: '28px' }}>{cert.badge}</span>
+                  <div>
+                    <h4 style={{ color: 'var(--ink-strong)', marginBottom: 4 }}>{cert.name}</h4>
+                    <p className="whisper-text">{cert.issuer} • {cert.year}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="portfolio-section">
+          <h2 className="glitch-text section-title" data-text="FORMACIÓN">FORMACIÓN ACADÉMICA</h2>
+          <div className="lovecraft-panel eldritch">
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
+              <div>
+                <h3 style={{ color: 'var(--eldritch-purple-glow)', marginBottom: 8 }}>🎓 Ingeniería de Sistemas</h3>
+                <p className="whisper-text">Universidad de Antioquia • 2022 - Presente</p>
+                <p className="whisper-text">Semestre 7 • Promedio: 4.6/5.0</p>
+                <p style={{ marginTop: 12, fontSize: '13px', color: 'var(--body)' }}>
+                  Enfoque: Arquitectura de Software, Sistemas Distribuidos, Inteligencia Artificial, Bases de Datos Avanzadas.
+                </p>
+              </div>
+              <div>
+                <h3 style={{ color: 'var(--cthulhu-green-glow)', marginBottom: 8 }}>📚 Formación Complementaria</h3>
+                <ul style={{ display: 'flex', flexDirection: 'column', gap: 8, color: 'var(--body)', fontSize: '13px' }}>
+                  <li>• CS50: Introducción a Ciencias de la Computación (Harvard/edX)</li>
+                  <li>• Arquitectura de Microservicios con Spring Cloud (Baeldung)</li>
+                  <li>• Machine Learning Engineering (Google Cloud)</li>
+                  <li>• Kubernetes para Desarrolladores (CNCF)</li>
+                  <li>• Clean Architecture & DDD (Pluralsight)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="portfolio-section">
+          <h2 className="glitch-text section-title" data-text="EXPERIENCIA">EXPERIENCIA Y COLABORACIONES</h2>
+          <div className="lovecraft-panel void">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+              <div className="experience-item">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 8 }}>
+                  <div>
+                    <h4 style={{ color: 'var(--ink-strong)' }}>Monitor Académico - Algoritmos y Estructuras de Datos</h4>
+                    <p className="whisper-text">Universidad de Antioquia • 2024 - Presente</p>
+                  </div>
+                  <span className="eldritch-rune">🎓</span>
+                </div>
+                <p style={{ color: 'var(--body)', marginTop: 8, lineHeight: 1.6 }}>
+                  Apoyo a 120+ estudiantes en resolución de problemas algorítmicos, estructuras de datos dinámicas
+                  y análisis de complejidad. Desarrollo de material didáctico y rúbricas de evaluación automatizada.
+                </p>
+              </div>
+
+              <div className="experience-item">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 8 }}>
+                  <div>
+                    <h4 style={{ color: 'var(--ink-strong)' }}>Desarrollador Junior Freelance</h4>
+                    <p className="whisper-text">Proyectos Web Full Stack • 2023 - Presente</p>
+                  </div>
+                  <span className="eldritch-rune">💼</span>
+                </div>
+                <p style={{ color: 'var(--body)', marginTop: 8, lineHeight: 1.6 }}>
+                  Desarrollo de 8+ aplicaciones web completas para PyMEs: e-commerce, sistemas de gestión,
+                  dashboards analíticos. Stack: React, Spring Boot, PostgreSQL, Docker, AWS.
+                </p>
+              </div>
+
+              <div className="experience-item">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 8 }}>
+                  <div>
+                    <h4 style={{ color: 'var(--ink-strong)' }}>Colaborador Open Source</h4>
+                    <p className="whisper-text">Comunidades React, Spring, Kubernetes • 2023 - Presente</p>
+                  </div>
+                  <span className="eldritch-rune">🌐</span>
+                </div>
+                <p style={{ color: 'var(--body)', marginTop: 8, lineHeight: 1.6 }}>
+                  Contribuciones a librerías de UI, corrección de bugs en Spring Boot, documentación
+                  técnica y mentoría en programas de primer contribuidor (Hacktoberfest, GSoC).
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="portfolio-section">
+          <div className="necronomicon-book">
+            <h2 className="glitch-text section-title" data-text="CONTACTO" style={{ textAlign: 'center', marginBottom: 24 }}>CONTACTO</h2>
+            <p style={{ textAlign: 'center', color: '#c9b98a', marginBottom: 24, fontSize: '16px', lineHeight: 1.7 }}>
+              ¿Tienes un proyecto en mente? ¿Buscas un desarrollador que entienda arquitectura limpia,
+              escalabilidad y buenas prácticas? Hablemos.
+            </p>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: 16, flexWrap: 'wrap' }}>
+              <a href="mailto:santiago.perez@estudiante.edu.co" className="btn-eldritch miskatonic" style={{ padding: '14px 28px', fontSize: '13px' }}>
+                <span className="btn-text">📧 ENVIAR EMAIL</span>
+              </a>
+              <a href="https://calendly.com/santiagoperez" target="_blank" rel="noopener" className="btn-eldritch" style={{ padding: '14px 28px', fontSize: '13px' }}>
+                <span className="btn-text">📅 AGENDAR LLAMADA</span>
+              </a>
+            </div>
+            <p style={{ textAlign: 'center', marginTop: 24, fontSize: '11px', color: '#8a7c4f', fontFamily: 'var(--font-mono)' }}>
+              "El conocimiento más antiguo no se encuentra en libros, sino en el código que perdura."
+            </p>
+          </div>
+        </section>
+      </main>
+
+      <footer className="portfolio-footer">
+        <p>© 2026 Santiago Pérez • Portafolio Público • EDU.CORE Platform</p>
+        <p className="whisper-text">"Lo que yace eternamente no puede morir, y con extraños eones, incluso la muerte puede morir."</p>
+        <p style={{ fontSize: '10px', marginTop: 8 }}>Última actualización: {new Date().toLocaleDateString('es-CO')}</p>
+      </footer>
+    </div>
+  );
+}

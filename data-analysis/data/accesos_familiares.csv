@@ -1,0 +1,13 @@
+id,familiar_id,estudiante_id,nombre_familiar,timestamp,accion_realizada
+1,1,1,Marta Morales,2026-02-01 08:15:00,Inicio de sesion
+2,1,1,Marta Morales,2026-02-01 08:20:00,Consulta de boletin
+3,2,2,Jorge Ramirez,2026-02-03 19:40:00,Consulta de hoja de vida
+4,1,1,Marta Morales,2026-02-10 14:05:00,Revision de notas Parcial 1
+5,3,4,Gloria Lopez,2026-02-12 20:15:00,Inicio de sesion
+6,4,3,Hernan Morales,2026-02-15 07:30:00,Consulta de alertas academicas
+7,4,3,Hernan Morales,2026-02-15 07:35:00,Consulta de asistencias
+8,1,1,Marta Morales,2026-02-22 18:50:00,Consulta seguimiento
+9,2,2,Jorge Ramirez,2026-02-25 21:10:00,Consulta de asistencias
+10,4,3,Hernan Morales,2026-03-01 06:45:00,Revision de notas criticas
+11,3,4,Gloria Lopez,2026-03-02 19:00:00,Consulta de boletin
+12,1,1,Marta Morales,2026-03-04 12:30:00,Consulta general

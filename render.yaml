@@ -1,0 +1,30 @@
+# Blueprint de Render para EDU.CORE (backend Java + frontend estático).
+# Uso: sube este repo a GitHub, en Render elige "New +" -> "Blueprint" y
+# apunta al repo. Render creará los dos servicios automáticamente.
+#
+# IMPORTANTE: cuando el backend tenga su URL pública (ej.
+# https://educore-backend.onrender.com), edita la variable VITE_API_URL
+# del frontend con esa URL y haz "Manual Deploy" del frontend.
+
+services:
+  - type: web
+    name: educore-backend
+    runtime: java
+    rootDir: backend
+    buildCommand: mvn -DskipTests package
+    startCommand: java -jar target/plataforma-estudiantil-1.0.0.jar
+    healthCheckPath: /dashboard/indicadores
+    envVars:
+      - key: JAVA_VERSION
+        value: 17
+
+  - type: web
+    name: educore-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      # ⚠️ Reemplaza con la URL pública real de educore-backend tras el primer deploy
+      - key: VITE_API_URL
+        value: https://educore-backend.onrender.com

@@ -1,0 +1,20 @@
+id,estudiante_id,nombre_estudiante,materia,materia_id,grupo_id,nota,tipo_evaluacion,fecha
+1,1,Santiago Perez,Desarrollo Web Full Stack,1,1,4.8,Parcial 1,2026-02-15
+2,1,Santiago Perez,Desarrollo Web Full Stack,1,1,4.5,Quiz 1,2026-02-28
+3,1,Santiago Perez,Bases de Datos Relacionales,2,2,4.2,Taller SQL,2026-03-05
+4,2,Valeria Ramirez,Desarrollo Web Full Stack,1,1,4.9,Parcial 1,2026-02-15
+5,2,Valeria Ramirez,Desarrollo Web Full Stack,1,1,4.6,Quiz 1,2026-02-28
+6,2,Valeria Ramirez,Bases de Datos Relacionales,2,2,4.4,Taller SQL,2026-03-05
+7,3,Mateo Morales,Desarrollo Web Full Stack,1,1,2.4,Parcial 1,2026-02-15
+8,3,Mateo Morales,Desarrollo Web Full Stack,1,1,2.8,Quiz 1,2026-02-28
+9,3,Mateo Morales,Bases de Datos Relacionales,2,2,2.6,Taller SQL,2026-03-05
+10,4,Camila Torres,Desarrollo Web Full Stack,1,1,3.8,Parcial 1,2026-02-15
+11,4,Camila Torres,Bases de Datos Relacionales,2,2,3.5,Taller SQL,2026-03-05
+12,5,Daniela Ortiz,Algoritmos y Estructuras,3,3,2.5,Taller Inicial,2026-03-02
+13,5,Daniela Ortiz,Algoritmos y Estructuras,3,3,2.8,Quiz Logica,2026-03-08
+14,6,Juan Diego Marin,Desarrollo Web Full Stack,1,1,3.2,Parcial 1,2026-02-15
+15,6,Juan Diego Marin,Bases de Datos Relacionales,2,2,3.6,Taller SQL,2026-03-05
+16,7,Sofia Castro,Desarrollo Web Full Stack,1,1,4.1,Parcial 1,2026-02-15
+17,7,Sofia Castro,Bases de Datos Relacionales,2,2,4.7,Taller SQL,2026-03-05
+18,8,Lucas Henao,Desarrollo Web Full Stack,1,1,2.9,Parcial 1,2026-02-15
+19,8,Lucas Henao,Bases de Datos Relacionales,2,2,2.7,Taller SQL,2026-03-05

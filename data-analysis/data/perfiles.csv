@@ -1,0 +1,9 @@
+id,estudiante_id,nombre_estudiante,resumen,intereses,experiencia,habilidades
+1,1,Santiago Perez,"Desarrollador fullstack con Spring y React","Software","Monitor academico en 2025","Java, Spring Boot, React, SQL, Git, Trabajo en Equipo, Resolucion de Problemas"
+2,2,Valeria Ramirez,"Enfocada en frontend y accesibilidad web","UI/UX","Desarrollo de landing pages","React, JavaScript, CSS, HTML, Comunicacion Asertiva, Resolucion de Problemas, Trabajo en Equipo"
+3,3,Mateo Morales,"Estudiante de segundo semestre con interes en testing","","Apoyo en mesa de ayuda","Java, Git, Trabajo en Equipo, Metodologias Agiles"
+4,4,Camila Torres,"Disenadora multimedia y frontend","Diseno","Freelance en branding","Figma, CSS, Illustrator, Creatividad, Empatia, JavaScript"
+5,5,Daniela Ortiz,"","Algoritmos","","Java, Logica de Programacion, Resolucion de Problemas"
+6,6,Juan Diego Marin,"Administrador de redes y sistemas","Redes","Instalacion de cableado estructurado","Linux, Redes, Routing, Git, Trabajo en Equipo"
+7,7,Sofia Castro,"Interesada en analitica de datos","Datos","Proyectos universitarios","Python, Pandas, SQL, Resolucion de Problemas, Matplotlib"
+8,8,Lucas Henao,"","","Practicante de soporte tecnico","Hardware, Redes, Atencion al Usuario, Resolucion de Problemas"

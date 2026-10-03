@@ -1,0 +1,34 @@
+id,estudiante_id,nombre_estudiante,grupo_id,fecha,estado,justificada
+1,1,Santiago Perez,1,2026-02-10,presente,false
+2,1,Santiago Perez,1,2026-02-17,presente,false
+3,1,Santiago Perez,1,2026-02-24,presente,false
+4,1,Santiago Perez,1,2026-03-03,presente,false
+5,2,Valeria Ramirez,1,2026-02-10,presente,false
+6,2,Valeria Ramirez,1,2026-02-17,presente,false
+7,2,Valeria Ramirez,1,2026-02-24,presente,false
+8,2,Valeria Ramirez,1,2026-03-03,presente,false
+9,3,Mateo Morales,1,2026-02-10,presente,false
+10,3,Mateo Morales,1,2026-02-17,ausente,false
+11,3,Mateo Morales,1,2026-02-24,ausente,false
+12,3,Mateo Morales,1,2026-03-03,ausente,false
+13,3,Mateo Morales,1,2026-03-05,ausente,false
+14,4,Camila Torres,1,2026-02-10,presente,false
+15,4,Camila Torres,1,2026-02-17,presente,false
+16,4,Camila Torres,1,2026-02-24,justificada,true
+17,4,Camila Torres,1,2026-03-03,presente,false
+18,5,Daniela Ortiz,3,2026-02-10,ausente,false
+19,5,Daniela Ortiz,3,2026-02-17,ausente,false
+20,5,Daniela Ortiz,3,2026-02-24,ausente,false
+21,5,Daniela Ortiz,3,2026-03-03,ausente,false
+22,6,Juan Diego Marin,1,2026-02-10,presente,false
+23,6,Juan Diego Marin,1,2026-02-17,presente,false
+24,6,Juan Diego Marin,1,2026-02-24,presente,false
+25,6,Juan Diego Marin,1,2026-03-03,presente,false
+26,7,Sofia Castro,1,2026-02-10,presente,false
+27,7,Sofia Castro,1,2026-02-17,presente,false
+28,7,Sofia Castro,1,2026-02-24,presente,false
+29,7,Sofia Castro,1,2026-03-03,presente,false
+30,8,Lucas Henao,1,2026-02-10,ausente,false
+31,8,Lucas Henao,1,2026-02-17,ausente,false
+32,8,Lucas Henao,1,2026-02-24,ausente,false
+33,8,Lucas Henao,1,2026-03-03,ausente,false

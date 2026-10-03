@@ -1,0 +1,24 @@
+# Dependencias
+node_modules/
+
+# Builds
+dist/
+target/
+*.jar
+*.class
+
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# Entornos y locales
+.env
+*.log
+dev.log
+
+# OS / editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

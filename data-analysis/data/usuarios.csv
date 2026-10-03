@@ -1,0 +1,21 @@
+id,nombre,correo,rol,estado,fecha_registro
+1,Admin Sistema,admin@instituto.edu.co,ADMIN,ACTIVO,2026-01-10 08:00:00
+2,Carlos Mendoza,carlos.mendoza@instituto.edu.co,DOCENTE,ACTIVO,2026-01-12 09:30:00
+3,Elena Gomez,elena.gomez@instituto.edu.co,DOCENTE,ACTIVO,2026-01-14 11:15:00
+4,Mariana Restrepo,mariana.restrepo@instituto.edu.co,BIENESTAR,ACTIVO,2026-01-15 14:00:00
+5,Andres Castano,andres.castano@instituto.edu.co,BIENESTAR,ACTIVO,2026-01-15 15:30:00
+6,Santiago Perez,santiago.perez@estudiante.edu.co,ESTUDIANTE,ACTIVO,2026-01-20 10:10:00
+7,Valeria Ramirez,valeria.ramirez@estudiante.edu.co,ESTUDIANTE,ACTIVO,2026-01-21 11:45:00
+8,Mateo Morales,mateo.morales@estudiante.edu.co,ESTUDIANTE,ACTIVO,2026-01-22 09:00:00
+9,Camila Torres,camila.torres@estudiante.edu.co,ESTUDIANTE,ACTIVO,2026-01-23 16:20:00
+10,Daniela Ortiz,daniela.ortiz@estudiante.edu.co,ESTUDIANTE,ACTIVO,2026-01-25 08:30:00
+11,Juan Diego Marin,juan.marin@estudiante.edu.co,ESTUDIANTE,ACTIVO,2026-01-27 14:10:00
+12,Marta Morales,marta.morales@familia.com,FAMILIAR,ACTIVO,2026-01-28 17:00:00
+13,Jorge Ramirez,jorge.ramirez@familia.com,FAMILIAR,ACTIVO,2026-01-29 18:30:00
+14,Sofia Castro,sofia.castro@estudiante.edu.co,ESTUDIANTE,ACTIVO,2026-02-02 10:00:00
+15,Lucas Henao,lucas.henao@estudiante.edu.co,ESTUDIANTE,ACTIVO,2026-02-05 13:40:00
+16,Gloria Lopez,gloria.lopez@familia.com,FAMILIAR,ACTIVO,2026-02-06 19:20:00
+17,Hernan Morales,hernan.morales@familia.com,FAMILIAR,ACTIVO,2026-02-08 07:45:00
+18,Andres Felipe Rios,andres.rios@estudiante.edu.co,ESTUDIANTE,ACTIVO,2026-02-12 11:00:00
+19,Juliana Velez,juliana.velez@estudiante.edu.co,ESTUDIANTE,ACTIVO,2026-02-15 15:10:00
+20,Tech Solutions SAS,contacto@techsolutions.com,EMPRESARIO,ACTIVO,2026-02-18 16:50:00

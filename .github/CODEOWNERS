@@ -1,0 +1,28 @@
+# CODEOWNERS
+# These users/groups will be automatically requested for review on PRs touching these files.
+
+# Global owners (fallback)
+* @Marusan94
+
+# Backend - Spring Boot
+/backend/ @Marusan94
+
+# Frontend - React + Vite
+/frontend/ @Marusan94
+
+# Data Analysis - Python
+/data-analysis/ @Marusan94
+
+# Documentation
+/docs/ @Marusan94
+README.md @Marusan94
+DESIGN.md @Marusan94
+ROBOT_AI_PAPER*.md @Marusan94
+
+# CI/CD
+/.github/workflows/ @Marusan94
+/.github/dependabot.yml @Marusan94
+
+# Configuration
+/render.yaml @Marusan94
+/iniciar_plataforma.bat @Marusan94

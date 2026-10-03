@@ -1,0 +1,149 @@
+# GitHub Repository Settings
+# This file documents desired settings; apply via GitHub UI or `gh` CLI
+
+repository:
+  name: plataforma-estudiantil
+  description: "EDU.CORE · Plataforma Integral de Gestión y Acompañamiento Estudiantil — Spring Boot + React + Python"
+  homepage: https://educore-frontend.onrender.com
+  topics:
+    - spring-boot
+    - react
+    - vite
+    - java
+    - python
+    - pandas
+    - education
+    - student-management
+    - dashboard
+    - portfolio
+  visibility: public
+  has_issues: true
+  has_projects: true
+  has_wiki: false
+  has_downloads: true
+  allow_squash_merge: true
+  allow_merge_commit: false
+  allow_rebase_merge: true
+  allow_auto_merge: true
+  delete_branch_on_merge: true
+  enable_automated_security_fixes: true
+  enable_vulnerability_alerts: true
+  enable_dependabot_alerts: true
+  enable_dependabot_security_updates: true
+
+branch_protection:
+  - pattern: main
+    required_status_checks:
+      strict: true
+      contexts:
+        - "Backend - Test & Build"
+        - "Frontend - Lint, Test & Build"
+        - "Data Analysis - Validate Scripts"
+        - "Security - Dependency Scan"
+    enforce_admins: false
+    required_pull_request_reviews:
+      required_approving_review_count: 1
+      dismiss_stale_reviews: true
+      require_code_owner_reviews: true
+    restrictions:
+      users: []
+      teams: []
+    required_linear_history: true
+    allow_force_pushes: false
+    allow_deletions: false
+    required_conversation_resolution: true
+
+  - pattern: develop
+    required_status_checks:
+      strict: true
+      contexts:
+        - "Backend - Test & Build"
+        - "Frontend - Lint, Test & Build"
+        - "Data Analysis - Validate Scripts"
+    required_pull_request_reviews:
+      required_approving_review_count: 1
+      dismiss_stale_reviews: true
+
+labels:
+  - name: "bug"
+    color: "d73a4a"
+    description: "Something isn't working"
+  - name: "enhancement"
+    color: "a2eeef"
+    description: "New feature or request"
+  - name: "documentation"
+    color: "0075ca"
+    description: "Improvements or additions to documentation"
+  - name: "good first issue"
+    color: "7057ff"
+    description: "Good for newcomers"
+  - name: "help wanted"
+    color: "008672"
+    description: "Extra attention is needed"
+  - name: "question"
+    color: "d876e3"
+    description: "Further information is requested"
+  - name: "wontfix"
+    color: "ffffff"
+    description: "This will not be worked on"
+  - name: "duplicate"
+    color: "cfd3d7"
+    description: "This issue or pull request already exists"
+  - name: "invalid"
+    color: "e4e669"
+    description: "This doesn't seem right"
+  - name: "dependencies"
+    color: "0366d6"
+    description: "Pull requests that update a dependency"
+  - name: "security"
+    color: "ee0701"
+    description: "Security related issues or fixes"
+  - name: "performance"
+    color: "fbca04"
+    description: "Performance improvements"
+  - name: "refactor"
+    color: "c2e0c6"
+    description: "Code refactoring"
+  - name: "testing"
+    color: "bfdadc"
+    description: "Test related changes"
+  - name: "ci/cd"
+    color: "5319e7"
+    description: "CI/CD pipeline changes"
+  - name: "design"
+    color: "f9d0c4"
+    description: "UI/UX design related"
+  - name: "backend"
+    color: "1d76db"
+    description: "Backend (Spring Boot) related"
+  - name: "frontend"
+    color: "61dafb"
+    description: "Frontend (React) related"
+  - name: "data-analysis"
+    color: "3776ab"
+    description: "Data Analysis (Python) related"
+  - name: "lovecraft-theme"
+    color: "00ff88"
+    description: "Lovecraftian theme related"
+  - name: "mascotas"
+    color: "f59e0b"
+    description: "Mascotas / CopilotWidget related"
+
+# GitHub Actions permissions
+actions_permissions:
+  allowed_actions: "all"
+  allowed_actions_github_owned: true
+  allowed_actions_verified_creators: true
+
+# Dependabot
+dependabot:
+  enabled: true
+  auto_merge:
+    patch: true
+    minor: true
+    major: false
+  groups:
+    - "react-ecosystem"
+    - "vite-ecosystem"
+    - "testing-libs"
+    - "linting-tools"

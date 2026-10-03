@@ -1,0 +1,114 @@
+version: 2
+updates:
+  # Java / Maven (Backend)
+  - package-ecosystem: "maven"
+    directory: "/backend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "America/Bogota"
+    labels:
+      - "dependencies"
+      - "java"
+      - "backend"
+    commit-message:
+      prefix: "chore(deps): "
+      prefix-development: "chore(deps-dev): "
+      include: "scope"
+    open-pull-requests-limit: 10
+    allow:
+      - dependency-type: "direct"
+      - dependency-type: "indirect"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+    automerged-updates:
+      - match:
+          update_type: "version-update:semver-patch"
+        # Auto-merge patch updates if CI passes
+      - match:
+          update_type: "version-update:semver-minor"
+        # Auto-merge minor updates if CI passes
+
+  # Node.js / npm (Frontend)
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "America/Bogota"
+    labels:
+      - "dependencies"
+      - "npm"
+      - "frontend"
+    commit-message:
+      prefix: "chore(deps): "
+      prefix-development: "chore(deps-dev): "
+      include: "scope"
+    open-pull-requests-limit: 15
+    groups:
+      react-ecosystem:
+        patterns:
+          - "react*"
+          - "@types/react*"
+      vite-ecosystem:
+        patterns:
+          - "vite*"
+          - "@vitejs/*"
+      testing-libs:
+        patterns:
+          - "@testing-library/*"
+          - "jest*"
+          - "vitest*"
+      linting-tools:
+        patterns:
+          - "eslint*"
+          - "prettier*"
+          - "@typescript-eslint/*"
+    automerged-updates:
+      - match:
+          update_type: "version-update:semver-patch"
+      - match:
+          update_type: "version-update:semver-minor"
+
+  # Python / pip (Data Analysis)
+  - package-ecosystem: "pip"
+    directory: "/data-analysis"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "America/Bogota"
+    labels:
+      - "dependencies"
+      - "python"
+      - "data-analysis"
+    commit-message:
+      prefix: "chore(deps): "
+      include: "scope"
+    open-pull-requests-limit: 10
+    allow:
+      - dependency-type: "direct"
+    automerged-updates:
+      - match:
+          update_type: "version-update:semver-patch"
+      - match:
+          update_type: "version-update:semver-minor"
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "America/Bogota"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "chore(deps): "
+      include: "scope"
+    open-pull-requests-limit: 5

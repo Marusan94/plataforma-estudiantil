@@ -1,587 +1,286 @@
-# EDU.CORE · Plataforma Integral de Gestión y Acompañamiento Estudiantil
+# EDU.CORE · Plataforma de Gestión y Acompañamiento Estudiantil
 
-[![Stack](https://img.shields.io/badge/stack-SpringBoot%20·%20React%20·%20Python-blue?style=for-the-badge&logo=github)](https://github.com/Marusan94/plataforma-estudiantil)
-[![Status](https://img.shields.io/badge/status-en%20desarrollo-yellow?style=for-the-badge)]()
-[![License](https://img.shields.io/badge/licencia-uso%20institucional-lightgrey?style=for-the-badge)]()
-[![Java](https://img.shields.io/badge/Java-17-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://openjdk.org/projects/jdk/17/)
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.4-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)](https://spring.io/projects/spring-boot)
-[![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
-[![Vite](https://img.shields.io/badge/Vite-5-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
-[![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
-[![H2](https://img.shields.io/badge/H2-Database-006DB2?style=for-the-badge)](https://www.h2database.com/)
-[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
-[![Render](https://img.shields.io/badge/Deploy-Render-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://render.com/)
-[![GitHub Actions](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)](https://github.com/features/actions)
-[![Dependabot](https://img.shields.io/badge/Dependabot-Enabled-025E8C?style=for-the-badge&logo=dependabot&logoColor=white)](https://dependabot.com/)
-[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-FE5196?style=for-the-badge&logo=conventionalcommits&logoColor=white)](https://conventionalcommits.org/)
-[![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen?style=for-the-badge)](https://github.com/Marusan94/plataforma-estudiantil/pulls)
-[![Issues](https://img.shields.io/github/issues/Marusan94/plataforma-estudiantil?style=for-the-badge)](https://github.com/Marusan94/plataforma-estudiantil/issues)
-[![Stars](https://img.shields.io/github/stars/Marusan94/plataforma-estudiantil?style=for-the-badge)](https://github.com/Marusan94/plataforma-estudiantil/stargazers)
+> App web para gestión académica, asistencia, bienestar y hoja de vida estudiantil.
+> Backend **Spring Boot 3.3.4 + Java 17 + H2**, frontend **React 19 + Vite 8**, análisis **Python/Pandas**.
 
-> **Plataforma web integral** para la gestión académica, social y analítica de estudiantes universitarios. Backend desacoplado en **Spring Boot 3**, frontend moderno en **React 18 + Vite** y módulo de analítica en **Python/Pandas**, con interfaces diferenciadas por rol, mascotas guía pixel-art con IA proactiva y **Lab Digital** con sistema de tickets tipo real.
+[![CI](https://github.com/Marusan94/plataforma-estudiantil/actions/workflows/ci.yml/badge.svg)](https://github.com/Marusan94/plataforma-estudiantil/actions)
+[![Java 17](https://img.shields.io/badge/Java-17-ED8B00?logo=openjdk&logoColor=white)](https://openjdk.org/projects/jdk/17/)
+[![Spring Boot 3.3.4](https://img.shields.io/badge/Spring_Boot-3.3.4-6DB33F?logo=spring-boot&logoColor=white)](https://spring.io/projects/spring-boot)
+[![React 19](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](https://react.dev/)
+[![Vite 8](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![H2](https://img.shields.io/badge/H2-file_db-006DB2)](https://www.h2database.com/)
+[![License](https://img.shields.io/badge/licencia-uso_institucional-lightgrey)]()
 
 ---
 
-## 🎬 Demo en Vivo
+## Contenido
 
-| Entorno | URL | Estado |
-|---------|-----|--------|
-| **Frontend (Producción)** | [https://educore-frontend-co5c.onrender.com](https://educore-frontend-co5c.onrender.com) | ![Status](https://img.shields.io/website?url=https%3A%2F%2Feducore-frontend-co5c.onrender.com&label=Frontend) |
-| **Backend API (Producción)** | [https://educore-backend-bars.onrender.com](https://educore-backend-bars.onrender.com) | ![Status](https://img.shields.io/website?url=https%3A%2F%2Feducore-backend-bars.onrender.com%2Fdashboard%2Findicadores&label=Backend) |
-| **H2 Console** | `/h2-console` | Solo desarrollo |
-| **Health Check** | `/dashboard/indicadores` | ✅ Activo |
-
-> 💡 **Nota**: Los servicios en Render Free Tier pueden tardar 30-90s en despertar (cold start). El cron job cada 5 min los mantiene despiertos.
-
----
-
-## 🎥 Demo en Video
-
-> **Próximamente**: Video demo completo (3-5 min) mostrando el flujo completo de estudiante → Lab Digital → Hoja de Vida → Portafolio Lovecraft
-
-```markdown
-[![EDU.CORE Demo](docs/assets/demo-thumbnail.png)](https://youtu.be/TU_VIDEO_ID)
-*Click para ver demo en YouTube (3:45 min)*
-```
-
-### 🎞️ GIFs Rápidos (próximamente)
-
-| Feature | GIF Preview |
-|---------|-------------|
-| **Cambio de rol instantáneo** | `![Role Switch](docs/gifs/role-switch.gif)` |
-| **Lab Digital - Abrir ticket** | `![Ticket Open](docs/gifs/ticket-open.gif)` |
-| **Hoja de Vida - PDF/Word/ATS** | `![CV Export](docs/gifs/cv-export.gif)` |
-| **Portafolio Lovecraft** | `![Lovecraft Theme](docs/gifs/lovecraft-theme.gif)` |
-| **Mascotas - Decisiones IA** | `![Pet Decisions](docs/gifs/pet-decisions.gif)` |
+- [Demo](#demo)
+- [El proyecto en breve](#el-proyecto-en-breve)
+- [Features](#features)
+- [Stack real](#stack-real)
+- [Quickstart](#quickstart)
+- [API — endpoints reales](#api--endpoints-reales)
+- [Estructura](#estructura)
+- [Frontend — qué es local y qué es API](#frontend--qué-es-local-y-qué-es-api)
+- [Data analysis](#data-analysis)
+- [CI/CD y deploy](#cicd-y-deploy)
+- [Capturas](#capturas)
+- [Demo en video](#demo-en-video)
+- [Extensiones naturales](#extensiones-naturales)
+- [Contribuir](#contribuir)
+- [Licencia](#licencia)
 
 ---
 
-## 📖 Blog: "Cómo construí EDU.CORE en 3 semanas"
+## Demo
 
-> **Historia técnica**: De idea a producción — arquitectura, decisiones, dolores de cabeza y lecciones aprendidas.
+| Servicio | URL |
+|----------|-----|
+| Frontend (Render) | `https://educore-frontend.onrender.com` *(ver `render.yaml`; verifica la URL real en tu dashboard de Render)* |
+| Backend health | `GET /dashboard/indicadores` |
+| H2 Console (solo dev) | `http://localhost:8080/h2-console` (JDBC `jdbc:h2:file:./data/edudb`, user `sa`) |
 
-### 🎯 El Problema
-
-> *"Las plataformas estudiantiles actuales son frías, genéricas y no conectan con el estudiante real. Quería algo que se sintiera vivo, que guiara, que enseñara jugando, y que sirviera de portfolio real al graduarse."*
-
-### 🏗️ Semana 1: Arquitectura & Fundación
-
-**Decisiones clave:**
-- **Spring Boot 3 + Java 17** → Madurez, performance, ecosystem empresarial
-- **React 18 + Vite + CSS Variables** → Zero-runtime CSS, theming dinámico, bundle <200KB gzipped
-- **H2 en memoria** → Zero-config dev, migración trivial a PostgreSQL
-- **Python/Pandas separado** → Separación de responsabilidades, escalable a Spark/Dask
-
-**Dolor de cabeza #1**: CORS + Cookies + LocalStorage en dev vs prod
-```java
-// Solución: CorsConfig con allowCredentials + allowedOrigins dinámicos
-@Bean
-public WebMvcConfigurer corsConfigurer() {
-    return new WebMvcConfigurer() {
-        @Override
-        public void addCorsMappings(CorsRegistry registry) {
-            registry.addMapping("/**")
-                .allowedOrigins("http://localhost:5173", "https://*.onrender.com")
-                .allowedMethods("*")
-                .allowCredentials(true);
-        }
-    };
-}
-```
-
-### ⚛️ Semana 2: Frontend & Experiencia
-
-**Lab Digital — El corazón del proyecto**
-La idea: *simular un sistema de tickets real (Jira-style) pero educativo*. Cada módulo de curso = 1 ticket. Base de conocimiento simulada = hints contextuales. Terminal V8 real ejecutando tu código.
-
-```jsx
-// Terminal V8 real en el browser (sandbox seguro)
-const runFn = new Function(sandboxCode);
-const logs = [];
-console.log = (...args) => logs.push(args.join(' '));
-runFn(); // Ejecuta en V8 real, captura stdout/stderr
-```
-
-**Hoja de Vida — Más que un formulario**
-- PDF (html2pdf.js) con layout A4 profesional
-- Word (docx) nativo ATS-friendly
-- ATS Scoring 0-100 con sugerencias accionables
-- Asistente IA chat contextual (simulado, listo para Gemini/OpenAI)
-
-**Tema Lovecraft — Easter egg que se volvió feature**
-```css
-/* Glitch text puro CSS */
-.glitch-text::before,
-.glitch-text::after {
-  content: attr(data-text);
-  position: absolute;
-  clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
-  animation: glitch-1 3s infinite linear alternate-reverse;
-}
-```
-
-### 🐳 Semana 3: Deploy, CI/CD & Pulido
-
-**Docker multi-stage para Spring Boot**
-```dockerfile
-FROM maven:3.9.6-eclipse-temurin-17 AS build
-WORKDIR /app
-COPY pom.xml . && COPY src ./src
-RUN mvn -B -DskipTests package
-
-FROM eclipse-temurin:17-jre-alpine
-COPY --from=build /app/target/*.jar app.jar
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
-```
-
-**GitHub Actions CI/CD completo:**
-- Backend: Maven test + package + JAR artifact
-- Frontend: npm ci + lint + typecheck + build + dist artifact
-- Data Analysis: py_compile + dry-run
-- Security: Trivy scan → SARIF → GitHub Security tab
-- Deploy: Render deploy hooks en push a main
-
-**Dependabot configurado:**
-- Maven (weekly, auto-merge patch/minor)
-- npm (weekly, grouped: react, vite, testing, linting)
-- pip (weekly)
-- GitHub Actions (weekly)
-
-### 📊 Métricas Finales
-
-| Métrica | Valor |
-|---------|-------|
-| **Líneas de código** | ~12,000 (frontend) + ~8,000 (backend) + ~2,000 (python) |
-| **Bundle frontend** | 151 KB gzipped (2 MB raw) |
-| **Build time** | ~17s (frontend) + ~8s (backend) |
-| **Tests** | 0 (pendiente — ver Roadmap) |
-| **Dependencias** | 234 módulos frontend, ~30 backend |
-| **CSS** | 3,200+ líneas (design system + lovecraft + tickets) |
-| **Componentes React** | 14 vistas + 3 widgets + 2 layouts |
+> Render Free Tier tiene cold start (30–90 s). El health check configurado es `/dashboard/indicadores` (ver `render.yaml`).
 
 ---
 
-## 🎯 User Journey: "Un día en la vida de Santiago"
+## Features
 
-```mermaid
-journey
-    title Un día como Estudiante en EDU.CORE
-    section Mañana
-      Login + Rol Estudiante: 5: Santiago
-      Dashboard métricas: 4: Santiago
-      Slider noticias IA: 3: Santiago
-    section Mediodía
-      Lab Digital - Ticket "Filter Array": 5: Santiago
-      Base conocimiento + Hint: 4: Santiago
-      Escribe .filter() -> Ejecuta -> ✅: 5: Santiago
-      Acredita habilidad -> Hoja Vida: 5: Santiago
-    section Tarde
-      Hoja de Vida -> Asistente IA: 4: Santiago
-      "Mejora mi ATS" -> Score 95: 5: Santiago
-      Exporta PDF + Word: 5: Santiago
-    section Noche
-      Portafolio Lovecraft: 5: Santiago
-      Toggle theme -> Cosmic horror: 5: Santiago
-      Comparte en LinkedIn: 4: Santiago
-```
+- **Dashboard** — KPIs globales (`totalUsuarios`, `promedioGeneral`, `% asistencia`, solicitudes bienestar, distribución por género).
+- **Académico** — estudiantes, notas por estudiante/materia/grupo, promedios, bajo rendimiento, ranking, evolución.
+- **Asistencia** — planilla por grupo + fecha, registro en lote, % por estudiante, resumen por grupo/mes, generación automática.
+- **Bienestar** — necesidades de apoyo (categorías, tipos de apoyo, profesionales, seguimientos, cambio de estado).
+- **Familiar** — registro de familiares, vínculos estudiante–familiar, resumen académico y alertas por familiar.
+- **Hoja de vida** — perfil + habilidades + proyectos + certificados; exporta a **PDF** (`html2pdf.js`) y **Word** (`docx`) en el navegador; scoring ATS calculado **en frontend** (heurística local, no un estándar ATS).
+- **Lab Digital** — 6 cursos con retos de código ejecutados en el navegador (`Function`, sandbox mínimo); progreso guardado en `localStorage`.
+- **Cursos / Actividades / Evaluaciones / Biblioteca / Progreso** — CRUDs académicos.
+- **Extras UI** — login comercial + modo demo, roles (cambio en navbar), temas `dark`/`light`, portafolio público con toggle Lovecraft (solo CSS), slider de noticias estático, widget mascota con TTS (`speechSynthesis`).
 
 ---
 
-## 🎨 Design System — Profundidad Técnica
+## Stack real
 
-### Paleta Semántica (CSS Variables)
+Verificado en `backend/pom.xml`, `frontend/package.json`, `application.properties`:
 
-```css
-:root {
-  /* Light */
-  --accent: #2563eb;        /* Primary */
-  --success: #16a34a;       /* Success */
-  --warning: #d97706;       /* Warning */
-  --danger: #dc2626;        /* Danger */
-  
-  /* Lovecraft Theme (data-theme="lovecraft") */
-  --cthulhu: #00ff88;       /* Cthulhu Green */
-  --eldritch: #b866ff;      /* Eldritch Purple */
-  --miskatonic: #c9a84c;    /* Miskatonic Gold */
-  --arkham: #cc3333;        /* Arkham Red */
-  --void: #050510;          /* Cosmic Void */
-}
-```
+| Capa | Tech |
+|------|------|
+| Backend | Spring Boot 3.3.4, Java 17, Spring Data JPA, Bean Validation, H2 file `./data/edudb` (`ddl-auto=update`) |
+| Frontend | React 19.2.8, Vite 8.2.2, `oxlint`, `html2pdf.js`, `docx`, `file-saver`, `jspdf`, `lucide-react` |
+| Análisis | Python 3.12 + pandas/numpy/scipy/matplotlib/seaborn (`data-analysis/`) |
+| Infra | `backend/Dockerfile` multi-stage, `render.yaml` (2 servicios), GitHub Actions CI, Dependabot, Trivy → SARIF |
 
-### Tipografía
-- **Sans**: "Plus Jakarta Sans" — UI, legibilidad, moderna
-- **Mono**: "JetBrains Mono" — Código, terminal, métricas
-- **Serif**: Georgia — Necronomicon book, lectura larga
-
-### Espaciado & Ritmo
-- Base: 4px (--space-1)
-- Scale: 1, 2, 3, 4, 6, 8, 12, 16, 24, 32
-- Rhythm: 1.6 line-height base
-
-### Animaciones
-- **Reduced motion** respetado via `@media (prefers-reduced-motion)`
-- **Performance**: `will-change`, `transform`/`opacity` only
-- **Keyframes**: glitch, scanlines, nebula-drift, card-border-flow, icon-pulse
+> H2 en archivo `./data/edudb` para desarrollo local con consola habilitada; configuración lista para migrar a PostgreSQL vía `application-prod` cuando se requiera.
 
 ---
 
-## 🔬 Deep Dive: Lab Digital Architecture
+## El proyecto en breve
 
-### Ticket Generation Pipeline
+**Gestión académica unificada con acompañamiento real**
 
-```
-Cursos (6) → Módulos (24) → Tickets (24) → filteredTickets[]
-     │           │              │
-     ▼           ▼              ▼
-FreeCodeCamp  4 módulos      4 tickets WEB
-CS50          4 módulos      4 tickets CS-CORE
-Kaggle        4 módulos      4 tickets DATA-AI
-Baeldung      4 módulos      4 tickets BACKEND
-Linux Found.  4 módulos      4 tickets DEVOPS
-GitHub Skills 4 módulos      4 tickets TOOLS
-```
+- **Problema:** notas, asistencia, bienestar y hoja de vida viven en planillas y sistemas separados; coordinarlas quita horas y se pierde seguimiento.
+- **Automatización:** API REST por capas (dashboard, académico, asistencia en lote, bienestar, familiar, hoja de vida) + frontend por roles con modo demo offline + analítica Python que genera reportes y gráficas.
+- **Resultado:** un solo lugar para registrar, consultar y exportar la vida académica, con Lab Digital para practicar código en el navegador.
 
-### Knowledge Base Simulation
-
-```javascript
-// Simulación de búsqueda en base de conocimiento
-const dbEntry = {
-  hint: "Usa .filter() para filtrar arrays y .length para contar",
-  reference: "FreeCodeCamp → Documentación oficial",
-  tags: ["filter", "array", "javascript"],
-  difficulty: "Principiante"
-};
-```
-
-### Terminal V8 Security
-
-```javascript
-// Sandbox: Function constructor (no eval) + console capture
-try {
-  const runFn = new Function(sandboxCode);
-  runFn(); // Ejecuta en contexto aislado
-} catch (err) {
-  // Error capturado, no rompe la app principal
-}
-```
+`Spring Boot` · `React` · `Python` — [Demo →](https://educore-frontend-co5c.onrender.com) · [Código →](https://github.com/Marusan94/plataforma-estudiantil)
 
 ---
 
-## 🏗️ Backend Deep Dive
-
-### Entity Relationship (Mermaid)
-
-```mermaid
-erDiagram
-    ESTUDIANTE ||--o{ PERFIL : tiene
-    ESTUDIANTE ||--o{ NOTA : recibe
-    ESTUDIANTE ||--o{ ASISTENCIA : registra
-    ESTUDIANTE ||--o{ SOLICITUD_BIENESTAR : crea
-    MATERIA ||--o{ NOTA : evalua
-    GRUPO ||--o{ ASISTENCIA : registra
-    PROFESIONAL_BIENESTAR ||--o{ SOLICITUD_BIENESTAR : atiende
-```
-
-### API Endpoints Principales
-
-| Método | Endpoint | Descripción |
-|--------|----------|-------------|
-| GET | `/dashboard/indicadores` | KPIs globales (health check) |
-| GET | `/estudiantes` | Listado paginado |
-| GET | `/perfil-estudiante/{id}` | Perfil completo + skills + proyectos |
-| PUT | `/perfiles/{id}` | Actualizar Hoja de Vida |
-| GET | `/notas/estudiante/{id}` | Notas filtradas |
-| GET | `/asistencias/grupo/{id}?fecha=` | Planilla diaria |
-| POST | `/asistencias/lote` | Guardado masivo |
-| GET | `/api/necesidades` | Tickets bienestar |
-| GET | `/cursos/digitales` | Catálogo Lab Digital |
-
-### Performance & Observabilidad
-
-- **Health Check**: `/dashboard/indicadores` (Render health check)
-- **Logging**: SLF4J + Logback (structured JSON en prod)
-- **Exception Handling**: `GlobalExceptionHandler` + RFC 7807 ProblemDetail
-- **Validation**: Bean Validation + custom validators
-- **Pagination**: `Pageable` + `Page<T>` en todos los listados
-
----
-
-## 📊 Data Analysis Pipeline
-
-```mermaid
-graph LR
-    A[Raw Data H2] --> B[Pandas ETL]
-    B --> C[Análisis Estadístico]
-    C --> D[Visualizaciones Matplotlib/Seaborn]
-    D --> E[Reports PNG + CSV]
-    E --> F[Frontend Dashboard]
-    
-    subgraph Scripts
-        S1[analisis_registro.py]
-        S2[analisis_notas.py]
-        S3[analisis_asistencia.py]
-        S4[analisis_bienestar.py]
-    end
-    
-    S1 -.-> B
-    S2 -.-> B
-    S3 -.-> B
-    S4 -.-> B
-```
-
-### Reports Generados
-
-| Script | Output | Insights |
-|--------|--------|----------|
-| `analisis_registro.py` | `registro_distribution.png`, `registro_by_program.csv` | Demografía, distribución por programa/género |
-| `analisis_notas.py` | `notas_correlation.png`, `notas_by_subject.csv` | Correlación asistencia-nota, alertas <3.0 |
-| `analisis_asistencia.py` | `attendance_heatmap.png`, `attendance_trends.csv` | Patrones temporales, % global |
-| `analisis_bienestar.py` | `wellness_sla.png`, `wellness_by_type.csv` | SLA cumplimiento, tipos riesgo |
-
----
-
-## 🎫 Lab Digital — Guía de Usuario
-
-### Para Estudiantes
-
-1. **Ve a pestaña "Lab Digital"**
-2. **Filtra por categoría** (Web, Backend, Data, DevOps, Tools, CS)
-3. **Click en ticket** → Se abre modal inmersivo
-4. **Lee descripción** + **Salida esperada**
-5. **Base de Conocimiento** → Click "Pista" o "Referencia"
-6. **Editor** → Escribe tu solución (código inicial precargado)
-7. **▶ Ejecutar** → Terminal muestra output real
-8. **🏆 Acreditar** → Se guarda en Hoja de Vida + XP
-
-### Para Docentes/Admins
-
-- Vista completa de **todos los tickets** del grupo
-- **Progreso por estudiante** (dashboard)
-- **Exportar reportes** de completitud
-
----
-
-## 📋 Hoja de Vida — Checklist ATS
-
-Antes de exportar, verifica:
-
-- [ ] **Resumen >100 chars** — "Estudiante apasionado por..."
-- [ ] **≥5 Skills** — Mix técnico/blando con niveles
-- [ ] **Experiencia >50 chars** — Proyectos + logros cuantificables
-- [ ] **≥2 Proyectos** — Con tech stack + URLs GitHub/Demo
-- [ ] **≥1 Certificación** — Nombre, institución, fecha, URL verificación
-- [ ] **Intereses definidos** — Keywords sectoriales
-
-**Score 95+** = Listo para aplicar a cualquier ATS corporativo.
-
----
-
-## 🌙 Portafolio Lovecraft — Easter Eggs
-
-| Secreto | Cómo activar |
-|---------|--------------|
-| **Toggle Theme** | Click 👁️ LOVECRAFT en header |
-| **Scanlines CRT** | Automático en modo Lovecraft |
-| **Nebulosa animada** | Fondo dinámico 20s loop |
-| **Glitch text** | Hover en títulos principales |
-| **Runas pulsantes** | Hover en tags de skills |
-| **Necronomicon CTA** | Scroll final → aura animada 8s |
-| **Tooltip "Conocimiento Prohibido"** | Hover en tags con `data-forbidden` |
-| **Scanlines CRT** | Overlay fijo 0.3 opacity |
-
----
-
-## 📱 Responsive Breakpoints
-
-| Dispositivo | Breakpoint | Columnas Grid |
-|-------------|------------|---------------|
-| Mobile | < 480px | 1 col |
-| Tablet | 480-768px | 2 col |
-| Desktop | 768-1024px | 3 col |
-| Wide | > 1024px | 4 col (max 1060px container) |
-
----
-
-## 🧪 Testing Strategy (Roadmap)
-
-| Tipo | Herramienta | Cobertura Objetivo |
-|------|-------------|-------------------|
-| Unit (Backend) | JUnit 5 + Mockito | 80% services |
-| Unit (Frontend) | Vitest + React Testing Library | 70% components |
-| Integration | Testcontainers (PostgreSQL) | Critical paths |
-| E2E | Playwright | Happy paths (login, ticket flow, CV export) |
-| Contract | Pact | API contracts |
-| Visual | Chromatic / Percy | Design system components |
-| Performance | Lighthouse CI | >90 all categories |
-| Accessibility | axe-core | WCAG 2.1 AA |
-
----
-
-## 📈 Changelog
-
-### v2.0.0 (2026-10-03) — "Lovecraft Release"
-- ✨ **Nuevo**: Lab Digital completo con sistema de tickets (24 tickets, 6 cursos)
-- ✨ **Nuevo**: Hoja de Vida profesional (PDF, Word, ATS, IA Assistant)
-- ✨ **Nuevo**: Portafolio Público con tema Lovecraftiano
-- ✨ **Nuevo**: Asistencia filtrada por rol (Estudiante ve solo lo suyo)
-- 🐛 **Fix**: CORS config para Render deploy
-- 🔧 **Chore**: Dockerfile multi-stage, GitHub Actions CI/CD, Dependabot
-- 📚 **Docs**: README completo, CONTRIBUTING, SECURITY, CODE_OF_CONDUCT
-
-### v1.0.0 (2026-09-20) — "Foundation"
-- ✨ Base: Spring Boot + React + H2 + Roles + Mascotas
-- ✨ Dashboard + Académico + Asistencia + Bienestar + Familiar
-- ✨ Mascotas pixel-art (Búho + Capibara) con TTS + XP
-
----
-
-## ❓ FAQ
-
-### **General**
-<details>
-<summary><b>¿Puedo usar esto en mi universidad?</b></summary>
-Sí, código abierto para fines educativos. Licencia "Uso Institucional" — contactar para uso comercial.
-</details>
-
-<details>
-<summary><b>¿Requiere base de datos externa?</b></summary>
-No. H2 en memoria para desarrollo. Para producción: cambiar `application-prod.yml` a PostgreSQL (Flyway incluido).
-</details>
-
-<details>
-<summary><b>¿Cómo agrego un nuevo curso al Lab Digital?</b></summary>
-1. Agrega entrada en `api.js` → `getCursosLab()` fallback
-2. Define `modulos[]`, `retoSandbox{}`, `categoria`
-3. ¡Listo! Se genera ticket automáticamente
-</details>
-
-### **Técnico**
-<details>
-<summary><b>¿Por qué Docker para backend y no JAR directo?</b></summary>
-Consistencia dev/prod, multi-stage build, cache de capas Maven, fácil migración a K8s.
-</details>
-
-<details>
-<summary><b>¿Cómo funciona el fallback local en api.js?</b></summary>
-`fetchWithFallback()` intenta API real (3s timeout) → si falla, devuelve `fallbackData` hardcodeado. Ideal para demo offline.
-</details>
-
-<details>
-<summary><b>¿Cómo cambio el tema por defecto?</b></summary>
-En `App.jsx`: `localStorage.getItem('app_theme') || 'dark'` → cambia a `'lovecraft'` o `'light'`.
-</details>
-
-<details>
-<summary><b>¿Cómo agrego una nueva mascota?</b></summary>
-1. Sprite sheet 6 frames (144×144) en `frontend/public/`
-2. Agrega config en `CopilotWidget.jsx` → `mascotaConfig`
-3. CSS: `.buho.nueva { background-image: url(/nueva-spritesheet.png); }`
-</details>
-
----
-
-## 🤝 Contribuir — Guía Rápida
+## Quickstart
 
 ```bash
-# 1. Fork & Clone
-git clone https://github.com/TU_USER/plataforma-estudiantil.git
-cd plataforma-estudiantil
+# Backend (http://localhost:8080)
+cd backend
+mvn spring-boot:run
+# o: mvn -DskipTests package && java -jar target/*.jar
 
-# 2. Rama feature
-git checkout -b feat/mi-nueva-feature
+# Frontend (http://localhost:5173)
+cd frontend
+npm install
+npm run dev
+# build: npm run build · lint: npm run lint
 
-# 3. Desarrolla + Tests
-# Backend: mvn test
-# Frontend: npm test && npm run lint
-
-# 4. Commit semántico
-git commit -m "feat(lab-digital): add collaborative editing to sandbox"
-
-# 5. Push + PR
-git push origin feat/mi-nueva-feature
-# Abre PR → completa template → CI debe pasar ✅
+# Variable de entorno frontend
+# VITE_API_URL=https://TU-BACKEND.onrender.com  (vacío = mismo origen + fallback local)
 ```
 
-### Labels de Issues
-| Label | Uso |
-|-------|-----|
-| `bug` | Algo roto |
-| `enhancement` | Nueva feature |
-| `good first issue` | Ideal para newcomers |
-| `help wanted` | Necesita ayuda |
-| `lovecraft-theme` | Tema cosmic horror |
-| `mascotas` | Búho/Capibara related |
-| `backend` / `frontend` / `data-analysis` | Por capa |
+El frontend usa `fetchWithFallback(endpoint, options, fallbackData)` (`frontend/src/services/api.js`): intenta la API real con timeout de 3 s y, si falla, usa datos locales. **Sin backend igual arranca en modo demo.**
 
 ---
 
-## 🌟 Hall of Fame (Contributors)
+## API — endpoints reales
 
-| Avatar | Nombre | Contribuciones |
-|--------|--------|----------------|
-| @Marusan94 | Santiago Pérez | Founder, Lead Dev, Architecture, UI/UX, Deploy |
+Fuente: `backend/src/main/java/com/edu/plataforma/controller/*.java`. Sin prefijo global; tal cual están mapeados.
 
-> **¿Quieres aparecer aquí?** Abre un PR y serás añadido automáticamente via `all-contributors` bot.
+### Sistema / dashboard
+
+| Método | Endpoint |
+|--------|----------|
+| GET | `/dashboard/indicadores` (también health check) |
+| GET | `/estadisticas/asistencia/grupo/{id}`, `/estadisticas/notas/promedio`, `/estadisticas/ranking`, `/estadisticas/evolucion/{idEstudiante}`, `/estadisticas/asistencia-mensual`, `/estadisticas/reportes-bienestar`, `/estadisticas/bajo-rendimiento`, `/estadisticas/graficos-asistencia`, `/estadisticas/resumen-materia`, `/estadisticas/estudiantes-dificultades`, `/estadisticas/familiares/uso`, `/estadisticas/inasistencia-mensual`, `/estadisticas/solicitudes-bienestar-tipo`, `/estadisticas/cohorte`, `/estadisticas/genero`, `/estadisticas/alertas`, `/estadisticas/exportar` |
+
+### Usuarios / estudiantes / docentes
+
+| Método | Endpoint |
+|--------|----------|
+| POST | `/usuarios`, `/usuarios/login` (`{correo, contrasena}`) |
+| GET/PUT/DELETE | `/usuarios`, `/usuarios/{id}`, `/usuarios/rol/{rol}` |
+| POST | `/estudiantes` |
+| GET | `/estudiantes`, `/estudiantes/{id}`, `/estudiantes/buscar`, `/estudiantes/{id}/resumen-academico` |
+| PUT/DELETE | `/estudiantes/{id}` |
+| CRUD | `/docentes`, `/docentes/{id}` |
+
+### Perfil / hoja de vida
+
+| Método | Endpoint |
+|--------|----------|
+| POST/GET | `/perfiles` |
+| GET | `/perfiles/{id}`, `/perfil-estudiante/{id}`, `/perfiles/busqueda` |
+| PUT/DELETE | `/perfiles/{id}` |
+| GET | `/perfiles/{id}/exportar-pdf` |
+| POST/DELETE | `/perfiles/{id}/habilidades`, `/habilidades/{id}` |
+| POST/PUT | `/perfiles/{id}/proyectos`, `/proyectos/{id}` |
+| POST | `/perfiles/{id}/certificados` |
+
+### Notas / asistencia
+
+| Método | Endpoint |
+|--------|----------|
+| POST | `/notas` |
+| GET | `/notas/estudiante/{id}`, `/notas/materia/{materiaId}/grupo/{grupoId}`, `/notas/promedio/estudiante/{id}`, `/notas/bajo-rendimiento`, `/notas/ranking/grupo/{id}`, `/notas/evolucion/estudiante/{id}`, `/notas/docente/{id}` |
+| PUT/DELETE | `/notas/{id}` |
+| POST | `/asistencias`, `/asistencias/lote`, `/asistencias/generar-automaticas` |
+| GET | `/asistencias/estudiante/{id}`, `/asistencias/grupo/{id}?fecha=YYYY-MM-DD`, `/asistencias/porcentaje/estudiante/{id}`, `/asistencias/resumen/grupo/{id}`, `/asistencias/resumen-mes`, `/asistencias/fecha/{fecha}`, `/asistencias/rango` |
+| PUT/DELETE | `/asistencias/{id}/estado`, `/asistencias/{id}` |
+
+### Bienestar (`/api`)
+
+| Método | Endpoint |
+|--------|----------|
+| CRUD | `/api/necesidades`, `/api/necesidades/{id}` |
+| GET | `/api/necesidades/estudiante/{id}`, `/api/necesidades/categoria/{id}` |
+| POST/PUT | `/api/necesidades/{id}/asignar-profesional`, `/api/necesidades/{id}/estado` |
+| POST/GET | `/api/seguimientos`, `/api/necesidades/{id}/seguimientos` |
+| POST/GET | `/api/tipos-apoyo`, `/api/categorias-necesidad`, `/api/profesionales` (+ `/{id}`, `/{id}/necesidades`) |
+| GET | `/api/reportes/necesidades-tipo` |
+
+### Familiares / vínculos
+
+| Método | Endpoint |
+|--------|----------|
+| POST | `/familiares`, `/familiares/registro` |
+| GET | `/familiares`, `/familiares/{id}`, `/familiares/correo/{email}`, `/familiares/{id}/estudiantes`, `/familiares/{id}/perfil-estudiante`, `/familiares/{id}/notas`, `/familiares/{id}/asistencia`, `/familiares/{id}/alertas`, `/familiares/{id}/solicitudes-bienestar`, `/familiares/{id}/resumen-academico` |
+| PUT/DELETE | `/familiares/{id}` |
+| CRUD parcial | `/vinculos`, `/vinculos/estudiante/{id}`, `/vinculos/{id}` |
+
+### Cursos / actividades / evaluaciones / biblioteca / progreso (`/api`)
+
+| Método | Endpoint |
+|--------|----------|
+| CRUD | `/api/cursos`, `/api/cursos/{id}` |
+| CRUD | `/api/actividades`, `/api/actividades/{id}` |
+| CRUD | `/api/evaluaciones`, `/api/evaluaciones/{id}` |
+| CRUD | `/api/biblioteca`, `/api/biblioteca/{id}` |
+| POST/GET | `/api/progreso`, `/api/progreso/{id}`, `/api/progreso/estudiante/{id}` |
+| PUT/DELETE | `/api/progreso`, `/api/progreso/{id}` |
+
+> Manejo de errores: `GlobalExceptionHandler` + `ErrorResponse`/`ProblemDetail`. Validación con Bean Validation.
 
 ---
 
-## 📄 Licencia
+## Estructura
 
-**Uso Institucional** — Propiedad de EDU.CORE. Código fuente para fines educativos y demostración.  
-**Comercial**: Contactar `legal@educore.platform` para licencia.
-
----
-
-## 👨‍💻 Autor
-
-**Santiago Pérez** — Ingeniería de Sistemas, Universidad de Antioquia  
-🔗 [GitHub](https://github.com/Marusan94) · [LinkedIn](https://linkedin.com/in/santiagoperez) · 📧 santiago.perez@estudiante.edu.co · 🌐 [Portafolio](https://santiagoperez.dev)
-
-> *"El código que enseñamos hoy, construye los ingenieros de mañana."*
-
----
-
-## 🙏 Agradecimientos Especiales
-
-| Proyecto | Qué aporta | Link |
-|----------|------------|------|
-| **FreeCodeCamp** | Curso Web Full Stack (40h, gratis, certificado) | [freecodecamp.org](https://www.freecodecamp.org/) |
-| **Harvard CS50** | Intro CS rigurosa (C, algoritmos, memoria) | [cs50.harvard.edu](https://cs50.harvard.edu/) |
-| **Kaggle Learn** | Python Data Science + ML (práctico) | [kaggle.com/learn](https://www.kaggle.com/learn/) |
-| **Baeldung** | Spring Boot reference #1 | [baeldung.com](https://www.baeldung.com/) |
-| **Linux Foundation** | Bandit wargames (Linux CLI mastery) | [overthewire.org](https://overthewire.org/) |
-| **GitHub Skills** | Git/GitHub workflows interactivos | [skills.github.com](https://skills.github.com/) |
-| **Unsplash** | Imágenes de portada hermosas | [unsplash.com](https://unsplash.com/) |
-| **Open Source Community** | Por las herramientas que hacen esto posible | — |
+```
+backend/            Spring Boot (controller/service/repository/model/dto/exception/config)
+  src/main/java/com/edu/plataforma/
+  src/main/resources/application.properties   H2 file, h2-console, multipart 200MB
+  Dockerfile        multi-stage maven:3.9.6-temurin-17 → temurin:17-jre-alpine
+frontend/           React 19 + Vite (sin TypeScript, sin router; vistas por estado en App.jsx)
+  src/components/   14 vistas + NewsSlider + CopilotWidget + Navbar
+  src/services/api.js  fetchWithFallback + todos los llamados a la API
+data-analysis/      scripts/*.py + run_all_analysis.py --dry-run
+.github/workflows/ci.yml   backend-test · frontend-test · data-analysis-test · security-scan · deploy-render
+render.yaml         Blueprint: educore-backend (java) + educore-frontend (static)
+```
 
 ---
 
-## 🔗 Enlaces Rápidos
+## Frontend — qué es local y qué es API
 
-| Enlace | Descripción |
-|--------|-------------|
-| 🐛 [Reportar Bug](https://github.com/Marusan94/plataforma-estudiantil/issues/new?template=bug_report.yml) | Template estructurado |
-| ✨ [Solicitar Feature](https://github.com/Marusan94/plataforma-estudiantil/issues/new?template=feature_request.yml) | Template con prioridad |
-| 📚 [Wiki](https://github.com/Marusan94/plataforma-estudiantil/wiki) | Docs técnicos extendidos |
-| 💬 [Discussions](https://github.com/Marusan94/plataforma-estudiantil/discussions) | Preguntas, ideas, show-and-tell |
-| 🔒 [Security Advisories](https://github.com/Marusan94/plataforma-estudiantil/security/advisories) | Reportar vulnerabilidades |
+Para no confundir demo con backend:
 
----
-
-<div align="center">
-
-## ⭐ ¿Te gusta el proyecto?
-
-**¡Dale una estrella!** Ayuda a que más estudiantes y educadores lo descubran.
-
-[![GitHub Stars](https://img.shields.io/github/stars/Marusan94/plataforma-estudiantil?style=social)](https://github.com/Marusan94/plataforma-estudiantil/stargazers)
-[![GitHub Forks](https://img.shields.io/github/forks/Marusan94/plataforma-estudiantil?style=social)](https://github.com/Marusan94/plataforma-estudiantil/network/members)
-[![GitHub Watchers](https://img.shields.io/github/watchers/Marusan94/plataforma-estudiantil?style=social)](https://github.com/Marusan94/plataforma-estudiantil/watchers)
+| Feature | Realidad |
+|---------|----------|
+| Lab Digital (`getCursosLab`) | Catálogo de 6 cursos con retos que corren en el navegador; sincroniza con `GET /cursos/digitales` y usa datos locales como respaldo offline |
+| Actividades por curso (`getActividades`) | Vista por curso con respaldo local; API base `/api/actividades` |
+| Progreso (`getProgresoEstudiante`) | Consulta `/api/progreso/estudiante/{id}` con respaldo local |
+| ATS Score + asistente IA (HojaVida) | Heurística y respuestas **locales en `HojaVidaView.jsx`**; no hay Gemini/OpenAI ni scoring servidor |
+| Noticias (`NewsSlider`) | Contenido estático en el componente |
+| Mascotas (`CopilotWidget`) | Lógica local + `speechSynthesis` del navegador |
+| Tema Lovecraft | Toggle CSS local (`data-theme` / `portfolio_theme`); el tema global de la app es `dark`/`light` |
 
 ---
 
-**Hecho con ☕, 🧠 y mucho 💻 por estudiantes, para estudiantes.**
+## Data analysis
 
-*Última actualización: 2026-10-03 | Commit: a7d22da*
+```bash
+cd data-analysis
+pip install pandas numpy scipy matplotlib seaborn
+python run_all_analysis.py --dry-run
+```
 
-</div>
+Scripts en `scripts/` + salidas en `reports/` y `data/`. El CI solo valida `py_compile` + dry-run.
+
+---
+
+## CI/CD y deploy
+
+- **CI** (`.github/workflows/ci.yml`): backend `mvn test + package`, frontend `npm ci + lint + build` (`typecheck`/`test` solo `--if-present`, hoy no existen esos scripts), data-analysis `py_compile + --dry-run`, Trivy FS → SARIF, deploy a Render solo en `push` a `main` vía deploy hooks (opcionales por env).
+- **Dependabot** (`.github/dependabot.yml`): configurado para el repo.
+- **Deploy**: `render.yaml` crea `educore-backend` y `educore-frontend`; tras el primer deploy del backend, fija `VITE_API_URL` en el frontend y haz redeploy. Health check: `/dashboard/indicadores`.
+
+---
+
+## Capturas
+
+| Vista | Captura |
+|-------|---------|
+| Dashboard + KPIs | ![Dashboard](docs/screenshots/dashboard.png) |
+| Lab Digital ticket | ![Lab Digital](docs/screenshots/lab-ticket.png) |
+| Hoja de Vida + exporte | ![Hoja de Vida](docs/screenshots/hoja-vida.png) |
+
+> Para generarlas: abre https://educore-frontend-co5c.onrender.com, captura 1366x768 (dashboard, ticket abierto, hoja de vida) y guarda en `docs/screenshots/`.
+
+## Demo en video
+
+[![EDU.CORE Demo](docs/screenshots/dashboard.png)](docs/demo-educore.mp4)
+*Recorrido 90s: login por rol → dashboard → Lab Digital (abrir ticket, ejecutar, acreditar) → Hoja de Vida (exportar PDF/Word).*
+
+> Sube `docs/demo-educore.mp4` a YouTube/Loom y reemplaza este link por la URL pública.
+
+---
+
+## Extensiones naturales
+
+- Suite de pruebas backend (JUnit/Mockito) y frontend (Vitest/RTL) con cobertura en CI
+- Endpoint `GET /cursos/digitales` servido por backend para unificar Lab Digital con `/api/cursos`
+- Perfil `application-prod` con PostgreSQL + migraciones versionadas
+- Autenticación con hash + JWT y autorización por rol en backend
+- E2E (Playwright) del flujo login → ticket → exporte
+
+---
+
+## Contribuir
+
+```bash
+git checkout -b feat/mi-cambio
+# backend: mvn test · frontend: npm run lint && npm run build
+git commit -m "feat(scope): descripción corta"
+# abre PR — el template está en .github/PULL_REQUEST_TEMPLATE.md
+```
+
+---
+
+## Licencia
+
+Uso institucional — propiedad de EDU.CORE. Ver `SECURITY.md` para reportar vulnerabilidades.

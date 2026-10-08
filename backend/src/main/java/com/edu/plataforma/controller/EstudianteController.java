@@ -2,6 +2,9 @@ package com.edu.plataforma.controller;
 
 import com.edu.plataforma.dto.EstudianteDTO;
 import com.edu.plataforma.dto.NotaPromedioDTO;
+import com.edu.plataforma.exception.ResourceNotFoundException;
+import com.edu.plataforma.model.Estudiante;
+import com.edu.plataforma.repository.EstudianteRepository;
 import com.edu.plataforma.service.EstudianteService;
 import com.edu.plataforma.service.NotaService;
 import jakarta.validation.Valid;
@@ -19,10 +22,14 @@ public class EstudianteController {
 
     private final EstudianteService estudianteService;
     private final NotaService notaService;
+    private final EstudianteRepository estudianteRepository;
 
-    public EstudianteController(EstudianteService estudianteService, NotaService notaService) {
+    public EstudianteController(EstudianteService estudianteService,
+                                NotaService notaService,
+                                EstudianteRepository estudianteRepository) {
         this.estudianteService = estudianteService;
         this.notaService = notaService;
+        this.estudianteRepository = estudianteRepository;
     }
 
     @PostMapping
@@ -38,6 +45,15 @@ public class EstudianteController {
     @GetMapping("/{id}")
     public ResponseEntity<EstudianteDTO> obtenerPorId(@PathVariable Long id) {
         return ResponseEntity.ok(estudianteService.obtenerPorId(id));
+    }
+
+    /** Resuelve el Estudiante a partir del id de Usuario (para login y dashboards por rol) */
+    @GetMapping("/usuario/{usuarioId}")
+    public ResponseEntity<EstudianteDTO> obtenerPorUsuarioId(@PathVariable Long usuarioId) {
+        Estudiante est = estudianteRepository.findByUsuarioId(usuarioId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "El usuario " + usuarioId + " no tiene ficha de estudiante"));
+        return ResponseEntity.ok(estudianteService.obtenerPorId(est.getId()));
     }
 
     @GetMapping("/buscar")

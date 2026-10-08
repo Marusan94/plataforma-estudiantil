@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { getDashboardData } from '../services/api';
+import { getDashboardData, getNotasEstudiante, getAsistenciasGrupo, getProgresoEstudiante, getCursos, getEstudianteByUsuario } from '../services/api';
 
-export default function DashboardView({ currentRole }) {
+export default function DashboardView({ currentRole, sessionUser }) {
   const isStudent = currentRole === 'ESTUDIANTE';
   const isDocente = currentRole === 'DOCENTE';
   const isFamiliar = currentRole === 'FAMILIAR';
@@ -16,6 +16,7 @@ export default function DashboardView({ currentRole }) {
   if (isBienestar) { roleTitle = 'Gestión Bienestar'; roleSubtitle = 'Casos y solicitudes activas'; }
   if (isAdmin) { roleTitle = 'Consola Administrativa'; roleSubtitle = 'Visión ejecutiva SaaS'; }
 
+  const [studentId, setStudentId] = useState(null);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedGroup, setSelectedGroup] = useState('ALL');
@@ -23,14 +24,79 @@ export default function DashboardView({ currentRole }) {
   const [isFiltering, setIsFiltering] = useState(false);
   const [activeDashboardMode, setActiveDashboardMode] = useState('ACADEMIC'); // 'ACADEMIC' | 'EXECUTIVE'
 
+  const [notas, setNotas] = useState([]);
+  const [notasAll, setNotasAll] = useState([]);
+  const [progreso, setProgreso] = useState([]);
+  const [asistenciaPct, setAsistenciaPct] = useState(null);
+  const [asistenciaBase, setAsistenciaBase] = useState(0);
+  const [cursosCount, setCursosCount] = useState(null);
+
   useEffect(() => {
     loadData();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentRole]);
 
   const loadData = async () => {
     setLoading(true);
     const res = await getDashboardData();
     setData(res);
+
+    try {
+      if (isStudent) {
+        // El id de Usuario NO es el id de Estudiante: se resuelve via /estudiantes/usuario/{id}
+        let sid = null;
+        const uid = sessionUser && sessionUser.id;
+        if (uid) {
+          try {
+            const ficha = await getEstudianteByUsuario(uid);
+            if (ficha && ficha.id) sid = ficha.id;
+          } catch (e) { /* sin ficha: cae al id 1 */ }
+        }
+        const target = sid || 1;
+        setStudentId(target);
+        const [n, p, a1, a2, a3, a4, a5, a6] = await Promise.all([
+          getNotasEstudiante(target),
+          getProgresoEstudiante(target),
+          getAsistenciasGrupo(1, '2026-03-03'),
+          getAsistenciasGrupo(2, '2026-03-03'),
+          getAsistenciasGrupo(3, '2026-03-03'),
+          getAsistenciasGrupo(4, '2026-03-03'),
+          getAsistenciasGrupo(5, '2026-03-03'),
+          getAsistenciasGrupo(6, '2026-03-03')
+        ]);
+        const notasList = Array.isArray(n) ? n : [];
+        setNotas(notasList);
+        setNotasAll([]);
+        setProgreso(Array.isArray(p) ? p : []);
+        const todas = [a1, a2, a3, a4, a5, a6].flatMap(x => (Array.isArray(x) ? x : []));
+        const mias = todas.filter(a => String(a.estudianteId) === String(target));
+        setAsistenciaBase(mias.length);
+        if (mias.length > 0) {
+          const presentes = mias.filter(a => a.estado === 'PRESENTE' || a.estado === 'JUSTIFICADO' || a.justificada === true).length;
+          setAsistenciaPct(Math.round((presentes / mias.length) * 100));
+        } else {
+          setAsistenciaPct(null);
+        }
+      } else if (isDocente) {
+        const [nAll, cursos] = await Promise.all([
+          getNotasEstudiante('all'),
+          getCursos()
+        ]);
+        setNotasAll(Array.isArray(nAll) ? nAll : []);
+        setNotas([]);
+        setCursosCount(Array.isArray(cursos) ? cursos.length : 0);
+      } else if (isFamiliar) {
+        const nAll = await getNotasEstudiante('all');
+        setNotasAll(Array.isArray(nAll) ? nAll : []);
+        setNotas([]);
+      } else {
+        setNotas([]);
+        setNotasAll([]);
+        setProgreso([]);
+      }
+    } catch (e) {
+      console.warn('[Dashboard] carga por rol:', e.message);
+    }
     setLoading(false);
   };
 
@@ -43,16 +109,430 @@ export default function DashboardView({ currentRole }) {
     }, 200);
   };
 
-  if (loading) {
+  if (loading || !data) {
     return (
       <div className="flat-panel">
-        <p className="font-mono text-mute">Cargando telemetría e indicadores analíticos...</p>
+        <p className="font-mono text-mute">Cargando indicadores del panel...</p>
       </div>
     );
   }
 
-  const materiasFiltradas = selectedGroup === 'ALL' 
-    ? data.resumenMaterias 
+  // ============ VISTA ESTUDIANTE (datos propios) ============
+  if (isStudent) {
+    const promedio = notas.length > 0
+      ? (notas.reduce((acc, n) => acc + (Number(n.valor) || 0), 0) / notas.length)
+      : null;
+    const porMateria = {};
+    notas.forEach(n => {
+      const key = n.nombreMateria || `Materia ${n.materiaId}`;
+      if (!porMateria[key]) porMateria[key] = { nombre: key, total: 0, count: 0 };
+      porMateria[key].total += (Number(n.valor) || 0);
+      porMateria[key].count += 1;
+    });
+    const materiasList = Object.values(porMateria).map(m => ({
+      ...m,
+      promedio: m.total / m.count,
+      pct: Math.min(100, Math.round(((m.total / m.count) / 5.0) * 100))
+    }));
+    const nombreEst = (sessionUser && sessionUser.nombre) || (notas[0] && notas[0].nombreEstudiante) || 'Estudiante';
+
+    return (
+      <div className="page-container">
+        <div className="flat-panel" style={{ borderLeft: '3px solid var(--accent)' }}>
+          <div style={{ fontSize: 16, fontWeight: 700 }}>{roleTitle}</div>
+          <div style={{ fontSize: 12, color: 'var(--mute)' }}>{roleSubtitle} · {nombreEst}</div>
+          <div style={{ marginTop: 8 }}>
+            <span className="badge-status badge-neutral">Mi semestre 2026-1</span>
+            <span className="badge-status badge-neutral" style={{ marginLeft: 8 }}>Periodo 2026-1</span>
+          </div>
+        </div>
+
+        <div className="metrics-grid">
+          <div className="metric-tile">
+            <div className="metric-tile-header"><span>Mi promedio (2026-1)</span></div>
+            <div className="metric-tile-value">{promedio != null ? `${promedio.toFixed(1)} / 5.0` : 'Sin datos'}</div>
+            <div className="metric-tile-sub">{notas.length > 0 ? `${notas.length} evaluaciones · Semestre 2026-1` : 'Sin evaluaciones registradas en 2026-1'}</div>
+          </div>
+          <div className="metric-tile">
+            <div className="metric-tile-header"><span>Mi asistencia (2026-1)</span></div>
+            <div className="metric-tile-value">{asistenciaPct != null ? `${asistenciaPct}%` : 'Sin datos'}</div>
+            <div className="metric-tile-sub">{asistenciaBase > 0 ? `${asistenciaBase} sesiones registradas · Periodo 2026-1` : 'Sin sesiones registradas para este estudiante'}</div>
+          </div>
+          <div className="metric-tile">
+            <div className="metric-tile-header"><span>Mis cursos (2026-1)</span></div>
+            <div className="metric-tile-value">{progreso.length > 0 ? progreso.length : (materiasList.length > 0 ? materiasList.length : 'Sin datos')}</div>
+            <div className="metric-tile-sub">Avance por curso · Semestre 2026-1</div>
+          </div>
+        </div>
+
+        <div className="flat-panel">
+          <div className="flat-panel-header">
+            <div>
+              <div style={{ fontSize: 13.5, fontWeight: 700 }}>Mi avance por curso · Semestre 2026-1</div>
+              <div style={{ fontSize: 11.5, color: 'var(--mute)' }}>Progreso reportado por tus docentes</div>
+            </div>
+            <span className="badge-status badge-neutral">{progreso.length} cursos</span>
+          </div>
+          {progreso.length === 0 ? (
+            <p className="font-mono text-mute">Sin registros de avance para tu cuenta en el semestre 2026-1.</p>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {progreso.map((p, i) => {
+                const avance = Number(p.avance) || 0;
+                return (
+                  <div key={p.id || i} style={{ borderBottom: '1px solid var(--hairline)', paddingBottom: 8 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4, fontSize: 12.5 }}>
+                      <span style={{ fontWeight: 600 }}>{p.curso || p.cursoId || 'Curso'}</span>
+                      <span style={{ fontWeight: 700 }}>{avance}%</span>
+                    </div>
+                    <div className="meter-bar-track">
+                      <div className="meter-bar-fill" style={{ width: `${Math.min(100, avance)}%`, backgroundColor: 'var(--accent)' }} />
+                    </div>
+                    {p.observaciones ? <div style={{ fontSize: 11.5, color: 'var(--mute)', marginTop: 4 }}>{p.observaciones}</div> : null}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        <div className="flat-panel">
+          <div className="flat-panel-header">
+            <div>
+              <div style={{ fontSize: 13.5, fontWeight: 700 }}>Mis notas por materia · Periodo 2026-1</div>
+              <div style={{ fontSize: 11.5, color: 'var(--mute)' }}>Promedio de cada asignatura en porcentaje</div>
+            </div>
+            <span className="badge-status badge-neutral">{materiasList.length} materias</span>
+          </div>
+          {materiasList.length === 0 ? (
+            <p className="font-mono text-mute">No tienes notas registradas en el periodo 2026-1.</p>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {materiasList.map(m => (
+                <div key={m.nombre} style={{ borderBottom: '1px solid var(--hairline)', paddingBottom: 8 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4, fontSize: 12.5 }}>
+                    <span style={{ fontWeight: 600 }}>{m.nombre}</span>
+                    <span style={{ fontWeight: 700 }}>{m.promedio.toFixed(1)} / 5.0 · {m.pct}%</span>
+                  </div>
+                  <div className="meter-bar-track">
+                    <div className="meter-bar-fill" style={{ width: `${m.pct}%`, backgroundColor: m.promedio >= 3.0 ? 'var(--accent)' : 'var(--danger)' }} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="flat-panel">
+          <div className="flat-panel-header">
+            <div>
+              <div style={{ fontSize: 13.5, fontWeight: 700 }}>Detalle de evaluaciones · 2026-1</div>
+              <div style={{ fontSize: 11.5, color: 'var(--mute)' }}>Agrupadas por materia</div>
+            </div>
+            <span className="badge-status badge-neutral">{notas.length} notas</span>
+          </div>
+          {notas.length === 0 ? (
+            <p className="font-mono text-mute">Sin evaluaciones para mostrar en este periodo.</p>
+          ) : (
+            <div className="terminal-table-wrap">
+              <table className="terminal-table">
+                <thead>
+                  <tr><th>Materia</th><th>Evaluación</th><th>Nota</th><th>Fecha</th><th>Estado</th></tr>
+                </thead>
+                <tbody>
+                  {[...notas].sort((a, b) => String(a.nombreMateria).localeCompare(String(b.nombreMateria))).map(n => {
+                    const ok = Number(n.valor) >= 3.0;
+                    return (
+                      <tr key={n.id}>
+                        <td style={{ fontWeight: 600 }}>{n.nombreMateria}</td>
+                        <td>{n.tipoEvaluacion}</td>
+                        <td style={{ fontWeight: 700 }}>{Number(n.valor).toFixed(1)} / 5.0</td>
+                        <td style={{ color: 'var(--mute)', fontSize: 12 }}>{n.fecha}</td>
+                        <td><span className={ok ? 'badge-status badge-success' : 'badge-status badge-danger'}>{ok ? '● Aprobado' : '● Reprobado'}</span></td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // ============ VISTA DOCENTE (sus cursos + riesgo) ============
+  if (isDocente) {
+    const materias = Array.isArray(data.resumenMaterias) ? data.resumenMaterias : [];
+    const totalEst = materias.reduce((a, m) => a + (Number(m.totalEstudiantes) || 0), 0);
+    const enRiesgo = {};
+    notasAll.forEach(n => {
+      if (Number(n.valor) < 3.0) {
+        const key = n.estudianteId || n.nombreEstudiante;
+        if (!enRiesgo[key]) enRiesgo[key] = { id: n.estudianteId, nombre: n.nombreEstudiante || 'Estudiante', notas: [] };
+        enRiesgo[key].notas.push(n);
+      }
+    });
+    const riesgoList = Object.values(enRiesgo);
+
+    return (
+      <div className="page-container">
+        <div className="flat-panel" style={{ borderLeft: '3px solid var(--accent)' }}>
+          <div style={{ fontSize: 16, fontWeight: 700 }}>{roleTitle}</div>
+          <div style={{ fontSize: 12, color: 'var(--mute)' }}>{roleSubtitle} · Periodo 2026-1{isDocente && data && data.resumenMaterias ? ` · ${data.resumenMaterias.length} materias a cargo` : ''}</div>
+        </div>
+
+        <div className="metrics-grid">
+          <div className="metric-tile">
+            <div className="metric-tile-header"><span>Materias a cargo</span></div>
+            <div className="metric-tile-value">{materias.length}</div>
+            <div className="metric-tile-sub">Periodo 2026-1</div>
+          </div>
+          <div className="metric-tile">
+            <div className="metric-tile-header"><span>Estudiantes totales</span></div>
+            <div className="metric-tile-value">{totalEst}</div>
+            <div className="metric-tile-sub">Suma de tus grupos</div>
+          </div>
+          <div className="metric-tile">
+            <div className="metric-tile-header"><span>En riesgo (&lt; 3.0)</span></div>
+            <div className="metric-tile-value" style={{ color: riesgoList.length > 0 ? 'var(--danger)' : 'inherit' }}>{riesgoList.length}</div>
+            <div className="metric-tile-sub">Requieren acompañamiento</div>
+          </div>
+        </div>
+
+        <div className="flat-panel">
+          <div className="flat-panel-header">
+            <div>
+              <div style={{ fontSize: 13.5, fontWeight: 700 }}>Mis materias · Promedio y reprobación</div>
+              <div style={{ fontSize: 11.5, color: 'var(--mute)' }}>Periodo 2026-1</div>
+            </div>
+            <span className="badge-status badge-neutral">{materias.length} materias</span>
+          </div>
+          {materias.length === 0 ? (
+            <p className="font-mono text-mute">No tienes materias asignadas en este periodo.</p>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              {materias.map(m => {
+                const fillPct = Math.min(100, ((Number(m.promedio) || 0) / 5.0) * 100);
+                const ok = (Number(m.promedio) || 0) >= 3.0;
+                return (
+                  <div key={m.materiaId} style={{ borderBottom: '1px solid var(--hairline)', paddingBottom: 10 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4, fontSize: 12.5 }}>
+                      <span style={{ fontWeight: 600 }}>{m.nombreMateria} ({m.codigo}) · {m.totalEstudiantes} estudiantes</span>
+                      <span style={{ fontWeight: 700 }}>{Number(m.promedio).toFixed(1)} / 5.0</span>
+                    </div>
+                    <div className="meter-bar-track" style={{ marginBottom: 4 }}>
+                      <div className="meter-bar-fill" style={{ width: `${fillPct}%`, backgroundColor: ok ? 'var(--accent)' : 'var(--danger)' }} />
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--mute)' }}>
+                      <span>Mín: {Number(m.minimo).toFixed(1)} • Máx: {Number(m.maximo).toFixed(1)}</span>
+                      <span>Reprobación: {m.porcentajeReprobacion}%</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        <div className="flat-panel">
+          <div className="flat-panel-header">
+            <div>
+              <div style={{ fontSize: 13.5, fontWeight: 700 }}>Estudiantes en riesgo</div>
+              <div style={{ fontSize: 11.5, color: 'var(--mute)' }}>Con al menos una nota menor a 3.0</div>
+            </div>
+            <span className="badge-status badge-neutral">{riesgoList.length} casos</span>
+          </div>
+          {riesgoList.length === 0 ? (
+            <p className="font-mono text-mute">Ningún estudiante en riesgo: todos aprobaron sus evaluaciones.</p>
+          ) : (
+            <div className="terminal-table-wrap">
+              <table className="terminal-table">
+                <thead>
+                  <tr><th>Estudiante</th><th>Materia crítica</th><th>Nota</th><th>Recomendación</th></tr>
+                </thead>
+                <tbody>
+                  {riesgoList.flatMap(s => s.notas.map(n => (
+                    <tr key={`${s.id}-${n.id}`}>
+                      <td style={{ fontWeight: 600 }}>{s.nombre}</td>
+                      <td>{n.nombreMateria} ({n.tipoEvaluacion})</td>
+                      <td style={{ fontWeight: 700, color: 'var(--danger)' }}>{Number(n.valor).toFixed(1)}</td>
+                      <td style={{ fontSize: 12 }}>{n.recomendacion || 'Derivar a tutoría.'}</td>
+                    </tr>
+                  )))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // ============ VISTA FAMILIAR (estudiante vinculado) ============
+  if (isFamiliar) {
+    const nombreCuenta = (sessionUser && sessionUser.nombre ? String(sessionUser.nombre) : '').toLowerCase();
+    const tokens = nombreCuenta.split(/\s+/).filter(t => t.length > 2);
+    let vinculadas = [];
+    if (tokens.length > 0) {
+      vinculadas = notasAll.filter(n => {
+        const nom = String(n.nombreEstudiante || '').toLowerCase();
+        return tokens.some(t => nom.includes(t));
+      });
+    }
+    if (vinculadas.length === 0 && sessionUser && (sessionUser.estudianteId || sessionUser.hijoId)) {
+      const vid = String(sessionUser.estudianteId || sessionUser.hijoId);
+      vinculadas = notasAll.filter(n => String(n.estudianteId) === vid);
+    }
+    const nombreVinculado = vinculadas.length > 0 ? vinculadas[0].nombreEstudiante : null;
+    const promedioFam = vinculadas.length > 0
+      ? (vinculadas.reduce((a, n) => a + (Number(n.valor) || 0), 0) / vinculadas.length)
+      : null;
+
+    return (
+      <div className="page-container">
+        <div className="flat-panel" style={{ borderLeft: '3px solid var(--accent)' }}>
+          <div style={{ fontSize: 16, fontWeight: 700 }}>{roleTitle}</div>
+          <div style={{ fontSize: 12, color: 'var(--mute)' }}>{roleSubtitle} · Periodo 2026-1</div>
+        </div>
+        {vinculadas.length === 0 ? (
+          <div className="flat-panel">
+            <div className="flat-panel-header">
+              <div style={{ fontSize: 13.5, fontWeight: 700 }}>Sin estudiante vinculado</div>
+            </div>
+            <p className="font-mono text-mute">No se encontró un estudiante vinculado a su cuenta{nombreCuenta ? ` (${sessionUser.nombre})` : ''}. Pida al administrador que asocie un acudido a este usuario para ver su promedio, asistencia y notas.</p>
+          </div>
+        ) : (
+          <>
+            <div className="flat-panel">
+              <div className="flat-panel-header">
+                <div>
+                  <div style={{ fontSize: 13.5, fontWeight: 700 }}>Estudiante vinculado: {nombreVinculado}</div>
+                  <div style={{ fontSize: 11.5, color: 'var(--mute)' }}>Periodo 2026-1 · Semestre 2026-1</div>
+                </div>
+                <span className="badge-status badge-success">● Vínculo activo</span>
+              </div>
+            </div>
+            <div className="metrics-grid">
+              <div className="metric-tile">
+                <div className="metric-tile-header"><span>Promedio</span></div>
+                <div className="metric-tile-value">{promedioFam != null ? `${promedioFam.toFixed(1)} / 5.0` : 'Sin datos'}</div>
+                <div className="metric-tile-sub">Periodo 2026-1</div>
+              </div>
+              <div className="metric-tile">
+                <div className="metric-tile-header"><span>Evaluaciones</span></div>
+                <div className="metric-tile-value">{vinculadas.length}</div>
+                <div className="metric-tile-sub">Notas registradas</div>
+              </div>
+              <div className="metric-tile">
+                <div className="metric-tile-header"><span>Reprobadas (&lt; 3.0)</span></div>
+                <div className="metric-tile-value">{vinculadas.filter(n => Number(n.valor) < 3.0).length}</div>
+                <div className="metric-tile-sub">Requieren atención</div>
+              </div>
+            </div>
+            <div className="flat-panel">
+              <div className="flat-panel-header">
+                <div style={{ fontSize: 13.5, fontWeight: 700 }}>Boletín del periodo 2026-1</div>
+                <span className="badge-status badge-neutral">{vinculadas.length} notas</span>
+              </div>
+              <div className="terminal-table-wrap">
+                <table className="terminal-table">
+                  <thead>
+                    <tr><th>Asignatura</th><th>Evaluación</th><th>Nota</th><th>Fecha</th><th>Estado</th></tr>
+                  </thead>
+                  <tbody>
+                    {vinculadas.map(n => {
+                      const ok = Number(n.valor) >= 3.0;
+                      return (
+                        <tr key={n.id}>
+                          <td style={{ fontWeight: 600 }}>{n.nombreMateria}</td>
+                          <td>{n.tipoEvaluacion}</td>
+                          <td style={{ fontWeight: 700 }}>{Number(n.valor).toFixed(1)} / 5.0</td>
+                          <td style={{ color: 'var(--mute)', fontSize: 12 }}>{n.fecha}</td>
+                          <td><span className={ok ? 'badge-status badge-success' : 'badge-status badge-danger'}>{ok ? '● Aprobado' : '● Reprobado'}</span></td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+    );
+  }
+
+  // ============ VISTA BIENESTAR (solo casos, sin académico) ============
+  if (isBienestar) {
+    const porTipo = data.solicitudesPorTipo || {};
+    const totalSol = Object.values(porTipo).reduce((a, b) => a + (Number(b) || 0), 0);
+    const pendientes = Number(data.solicitudesPendientes) || 0;
+    const tipos = Object.entries(porTipo);
+
+    return (
+      <div className="page-container">
+        <div className="flat-panel" style={{ borderLeft: '3px solid var(--accent)' }}>
+          <div style={{ fontSize: 16, fontWeight: 700 }}>{roleTitle}</div>
+          <div style={{ fontSize: 12, color: 'var(--mute)' }}>{roleSubtitle} · Periodo 2026-1</div>
+        </div>
+
+        <div className="metrics-grid">
+          <div className="metric-tile">
+            <div className="metric-tile-header"><span>Casos totales</span></div>
+            <div className="metric-tile-value">{data.totalSolicitudesBienestar}</div>
+            <div className="metric-tile-sub">Solicitudes registradas</div>
+          </div>
+          <div className="metric-tile">
+            <div className="metric-tile-header"><span>Casos pendientes</span></div>
+            <div className="metric-tile-value">{pendientes}</div>
+            <div className="metric-tile-sub">Requieren atención</div>
+          </div>
+          <div className="metric-tile">
+            <div className="metric-tile-header"><span>Tipos activos</span></div>
+            <div className="metric-tile-value">{tipos.length}</div>
+            <div className="metric-tile-sub">Áreas de apoyo</div>
+          </div>
+        </div>
+
+        <div className="flat-panel">
+          <div className="flat-panel-header">
+            <div>
+              <div style={{ fontSize: 13.5, fontWeight: 700 }}>Distribución de casos por tipo</div>
+              <div style={{ fontSize: 11.5, color: 'var(--mute)' }}>Periodo 2026-1</div>
+            </div>
+            <span className="badge-status badge-neutral">{totalSol} casos</span>
+          </div>
+          {tipos.length === 0 ? (
+            <p className="font-mono text-mute">No hay solicitudes de bienestar registradas.</p>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {tipos.map(([tipo, cant]) => {
+                const pct = totalSol > 0 ? Math.round((Number(cant) / totalSol) * 100) : 0;
+                return (
+                  <div key={tipo} style={{ borderBottom: '1px solid var(--hairline)', paddingBottom: 8 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4, fontSize: 12.5 }}>
+                      <span>{tipo}</span>
+                      <span style={{ fontWeight: 600 }}>{cant} ({pct}%)</span>
+                    </div>
+                    <div className="meter-bar-track">
+                      <div className="meter-bar-fill" style={{ width: `${pct}%`, backgroundColor: 'var(--accent)' }} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+          <div style={{ marginTop: 16, paddingTop: 10, borderTop: '1px solid var(--hairline)', fontSize: 11.5, color: 'var(--mute)' }}>
+            <div>SLA promedio de respuesta institucional: 24 horas</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const materiasFiltradas = selectedGroup === 'ALL'
+    ? data.resumenMaterias
     : data.resumenMaterias.filter(m => m.materiaId === parseInt(selectedGroup));
 
   const totalSolicitudes = Object.values(data.solicitudesPorTipo || {}).reduce((a, b) => a + b, 0);
@@ -95,14 +575,14 @@ export default function DashboardView({ currentRole }) {
       {/* Dashboard Mode Switcher */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
         <div className="segmented-control">
-          <button 
+          <button
             type="button"
             onClick={() => setActiveDashboardMode('ACADEMIC')}
             className={`segmented-btn ${activeDashboardMode === 'ACADEMIC' ? 'active' : ''}`}
           >
             Vista Académica & Operativa
           </button>
-          <button 
+          <button
             type="button"
             onClick={() => setActiveDashboardMode('EXECUTIVE')}
             className={`segmented-btn ${activeDashboardMode === 'EXECUTIVE' ? 'active' : ''}`}
@@ -127,11 +607,11 @@ export default function DashboardView({ currentRole }) {
               <div className="tui-dots">
                 <span className="tui-dot" style={{ background: '#ef4444' }}></span>
                 <span className="tui-dot" style={{ background: '#f59e0b' }}></span>
-                <span className="tui-dot" style={{ background: '#22c55e' }}></span>
+                <span className="tui-dot" style={{ background: '#000000' }}></span>
               </div>
               <div>edu.core // terminal v2.4</div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e' }}></span>
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#000000' }}></span>
                 <span>online</span>
               </div>
             </div>
@@ -152,8 +632,8 @@ export default function DashboardView({ currentRole }) {
               <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12 }}>
                   <span className="text-mute">Grupo:</span>
-                  <select 
-                    value={selectedGroup} 
+                  <select
+                    value={selectedGroup}
                     onChange={(e) => handleFilterChange(e.target.value, selectedPeriod)}
                     className="role-select"
                   >
@@ -166,8 +646,8 @@ export default function DashboardView({ currentRole }) {
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12 }}>
                   <span className="text-mute">Periodo:</span>
-                  <select 
-                    value={selectedPeriod} 
+                  <select
+                    value={selectedPeriod}
                     onChange={(e) => handleFilterChange(selectedGroup, e.target.value)}
                     className="role-select"
                   >
@@ -270,15 +750,15 @@ export default function DashboardView({ currentRole }) {
                   <span style={{ fontSize: 11.5, fontWeight: 700, color: item.color, marginBottom: 4 }}>
                     {item.count} est. ({item.pct}%)
                   </span>
-                  <div 
-                    style={{ 
-                      width: '80%', 
-                      height: `${item.pct * 1.8}%`, 
+                  <div
+                    style={{
+                      width: '80%',
+                      height: `${item.pct * 1.8}%`,
                       minHeight: 12,
-                      backgroundColor: item.color, 
+                      backgroundColor: item.color,
                       borderRadius: '4px 4px 0 0',
                       transition: 'height 400ms ease'
-                    }} 
+                    }}
                   />
                   <span style={{ fontSize: 10.5, color: 'var(--mute)', marginTop: 6, textAlign: 'center' }}>
                     {item.range}
@@ -315,12 +795,12 @@ export default function DashboardView({ currentRole }) {
                       </div>
 
                       <div className="meter-bar-track" style={{ marginBottom: 4 }}>
-                        <div 
-                          className="meter-bar-fill" 
-                          style={{ 
+                        <div
+                          className="meter-bar-fill"
+                          style={{
                             width: `${fillPct}%`,
                             backgroundColor: isPassing ? 'var(--accent)' : 'var(--danger)'
-                          }} 
+                          }}
                         />
                       </div>
 

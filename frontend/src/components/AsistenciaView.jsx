@@ -107,7 +107,7 @@ export default function AsistenciaView({ currentRole }) {
               <span style={{ fontWeight: 700, color: 'var(--success)' }}>100% (4 de 4 sesiones)</span>
             </div>
             <div className="meter-bar-track">
-              <div className="meter-bar-fill" style={{ width: '100%', backgroundColor: 'var(--success)' }} />
+              <div className="meter-bar-fill" style={{ width: '100%', backgroundColor: 'var(--ink-strong)' }} />
             </div>
           </div>
 

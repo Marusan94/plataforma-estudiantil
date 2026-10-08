@@ -29,6 +29,13 @@ public class UsuarioController {
         return new ResponseEntity<>(creado, HttpStatus.CREATED);
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<UsuarioDTO> login(@RequestBody Map<String, String> body) {
+        String correo = body == null ? null : body.get("correo");
+        String contrasena = body == null ? null : body.get("contrasena");
+        return ResponseEntity.ok(usuarioService.login(correo, contrasena));
+    }
+
     @GetMapping
     public ResponseEntity<List<UsuarioDTO>> listarUsuarios() {
         return ResponseEntity.ok(usuarioService.listarUsuarios());

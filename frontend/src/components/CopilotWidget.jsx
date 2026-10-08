@@ -126,19 +126,19 @@ export default function CopilotWidget({ currentRole, activeTab }) {
   const roleDisabled = !!disabledRoles[currentRole];
   const kindLabel = KIND_LABEL[current.role.toLowerCase()] || current.role;
 
-  // Color + icono pixel por tipo de mensaje para identificarlo al instante
+  // Color neutro monocromo por tipo de mensaje
   const KIND_STYLE = {
-    'alerta': { color: '#b91c1c', border: '#b91c1c', icon: '⚠' },
-    'recomendación': { color: '#1d4ed8', border: '#1d4ed8', icon: '✦' },
-    'recordatorio': { color: '#b45309', border: '#b45309', icon: '◷' },
-    'oportunidad': { color: '#15803d', border: '#15803d', icon: '★' },
-    'revisión': { color: '#6d28d9', border: '#6d28d9', icon: '◉' },
-    'seguimiento': { color: '#0369a1', border: '#0369a1', icon: '◎' },
-    'triage': { color: '#be185d', border: '#be185d', icon: '✚' },
-    'métrica': { color: '#92400e', border: '#92400e', icon: '▤' },
-    'reporte': { color: '#0f766e', border: '#0f766e', icon: '▤' },
-    'recurso': { color: '#4d7c0f', border: '#4d7c0f', icon: '⬢' },
-    'personalidad': { color: '#6b5d2e', border: '#6b5d2e', icon: '❖' },
+    'alerta': { color: '#6b7280', border: '#6b7280', icon: '⚠' },
+    'recomendación': { color: '#4b5563', border: '#4b5563', icon: '✦' },
+    'recordatorio': { color: '#6b7280', border: '#6b7280', icon: '◷' },
+    'oportunidad': { color: '#374151', border: '#374151', icon: '★' },
+    'revisión': { color: '#4b5563', border: '#4b5563', icon: '◉' },
+    'seguimiento': { color: '#6b7280', border: '#6b7280', icon: '◎' },
+    'triage': { color: '#374151', border: '#374151', icon: '✚' },
+    'métrica': { color: '#4b5563', border: '#4b5563', icon: '▤' },
+    'reporte': { color: '#6b7280', border: '#6b7280', icon: '▤' },
+    'recurso': { color: '#374151', border: '#374151', icon: '⬢' },
+    'personalidad': { color: '#4b5563', border: '#4b5563', icon: '❖' },
   };
   const kindStyle = KIND_STYLE[current.role.toLowerCase()] || { color: '#202020', border: '#202020', icon: '●' };
 

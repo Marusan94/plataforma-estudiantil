@@ -3,21 +3,21 @@ import { getCursosLab, completarRetoLab } from '../services/api';
 
 // Icons and visual assets for each category/challenge
 const categoryIcons = {
-  'WEB': { emoji: '🌐', color: '#3b82f6', bg: 'rgba(59, 130, 246, 0.1)', label: 'Desarrollo Web' },
-  'BACKEND': { emoji: '⚙️', color: '#8b5cf6', bg: 'rgba(139, 92, 246, 0.1)', label: 'Backend' },
-  'DATA-AI': { emoji: '🧠', color: '#10b981', bg: 'rgba(16, 185, 129, 0.1)', label: 'Data & IA' },
-  'DEVOPS': { emoji: '🐳', color: '#f59e0b', bg: 'rgba(245, 158, 11, 0.1)', label: 'DevOps & Linux' },
-  'TOOLS': { emoji: '🔧', color: '#ec4899', bg: 'rgba(236, 72, 153, 0.1)', label: 'Herramientas & Git' },
-  'CS-CORE': { emoji: '🎓', color: '#6366f1', bg: 'rgba(99, 102, 241, 0.1)', label: 'Ciencias de la Computación' }
+  'WEB': { emoji: '🌐', color: '#9ca3af', bg: 'rgba(156, 163, 175, 0.12)', label: 'Desarrollo Web' },
+  'BACKEND': { emoji: '⚙️', color: '#9ca3af', bg: 'rgba(156, 163, 175, 0.12)', label: 'Backend' },
+  'DATA-AI': { emoji: '🧠', color: '#9ca3af', bg: 'rgba(156, 163, 175, 0.12)', label: 'Data & IA' },
+  'DEVOPS': { emoji: '🐳', color: '#9ca3af', bg: 'rgba(156, 163, 175, 0.12)', label: 'DevOps & Linux' },
+  'TOOLS': { emoji: '🔧', color: '#9ca3af', bg: 'rgba(156, 163, 175, 0.12)', label: 'Herramientas & Git' },
+  'CS-CORE': { emoji: '🎓', color: '#9ca3af', bg: 'rgba(156, 163, 175, 0.12)', label: 'Ciencias de la Computación' }
 };
 
 const challengeImages = {
-  'course-web-01': 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400&h=220&fit=crop',
-  'course-cs-01': 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400&h=220&fit=crop',
-  'course-py-01': 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=220&fit=crop',
-  'course-backend-01': 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=400&h=220&fit=crop',
-  'course-linux-01': 'https://images.unsplash.com/photo-1580910051074-3eb694886505?w=400&h=220&fit=crop',
-  'course-git-01': 'https://images.unsplash.com/photo-1618401471353-b98afee0b2eb?w=400&h=220&fit=crop'
+  'course-web-01': '/img/photo-1498050108023-c5249f4df085.jpg?w=400&h=220&fit=crop',
+  'course-cs-01': '/img/photo-1555066931-4365d14bab8c.jpg?w=400&h=220&fit=crop',
+  'course-py-01': '/img/photo-1551288049-bebda4e38f71.jpg?w=400&h=220&fit=crop',
+  'course-backend-01': '/img/photo-1558494949-ef010cbdcc31.jpg?w=400&h=220&fit=crop',
+  'course-linux-01': '/img/photo-1580910051074-3eb694886505.jpg?w=400&h=220&fit=crop',
+  'course-git-01': '/img/photo-1618401471353-b98afee0b2eb.jpg?w=400&h=220&fit=crop'
 };
 
 export default function LabDigitalView({ currentRole }) {

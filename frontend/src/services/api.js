@@ -1,6 +1,6 @@
 // Servicio centralizado de conexion a API REST Spring Boot con fallback integrado
 // En producción se inyecta con la variable VITE_API_URL (ver render.yaml)
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+const API_BASE = import.meta.env.VITE_API_URL || '';
 
 export async function fetchWithFallback(endpoint, options = {}, fallbackData = null) {
   try {
@@ -76,7 +76,7 @@ export async function getPerfilEstudiante(estudianteId = 1) {
     resumen: 'Estudiante apasionado por el desarrollo fullstack con Spring Boot y React. Enfocado en soluciones limpias y escalables.',
     intereses: 'Arquitectura de software, APIs REST, React, Cloud Computing, Inteligencia Artificial',
     experiencia: 'Monitor academico de Algoritmos durante 2025. Desarrollador Junior freelance en proyectos web.',
-    fotoUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300',
+    fotoUrl: '/img/photo-1534528741775-53994a69daeb.jpg',
     habilidades: [
       { id: 1, nombre: 'Java & Spring Boot', nivel: 'Avanzado', tipo: 'Tecnica' },
       { id: 2, nombre: 'React & Tailwind CSS', nivel: 'Avanzado', tipo: 'Tecnica' },
@@ -174,6 +174,19 @@ export async function registrarNuevoUsuario(userData) {
     method: 'POST',
     body: JSON.stringify(userData)
   }, { ...userData, id: Date.now(), estado: 'ACTIVO' });
+}
+
+// Resuelve la ficha de Estudiante a partir del id de Usuario (login real)
+export async function getEstudianteByUsuario(usuarioId) {
+  return fetchWithFallback(`/estudiantes/usuario/${usuarioId}`, { method: 'GET' }, null);
+}
+
+// 6b. Inicio de sesion con credenciales reales (POST /usuarios/login)
+export async function loginUser(correo, contrasena) {
+  return fetchWithFallback('/usuarios/login', {
+    method: 'POST',
+    body: JSON.stringify({ correo, contrasena })
+  }, null);
 }
 
 // 7. Lab Exploratorio de Habilidades Digitales & Cursos Gratuitos
@@ -369,4 +382,77 @@ export async function completarRetoLab(cursoId, habilidad) {
     localStorage.setItem(profileKey, JSON.stringify(current));
   }
   return { success: true, habilidad, totalSkills: current.length };
+}
+
+// 8. Cursos (gestión académica)
+export async function getCursos() {
+  return fetchWithFallback('/api/cursos', { method: 'GET' }, []);
+}
+
+export async function createCurso(data) {
+  return fetchWithFallback('/api/cursos', {
+    method: 'POST',
+    body: JSON.stringify(data)
+  }, { ...data, id: Date.now() });
+}
+
+export async function updateCurso(id, data) {
+  return fetchWithFallback(`/api/cursos/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(data)
+  }, { ...data, id });
+}
+
+export async function deleteCurso(id) {
+  return fetchWithFallback(`/api/cursos/${id}`, {
+    method: 'DELETE'
+  }, { mensaje: 'Curso eliminado' });
+}
+
+// 9. Actividades por curso
+export async function getActividades(cursoId) {
+  return fetchWithFallback(`/api/cursos/${cursoId}/actividades`, { method: 'GET' }, []);
+}
+
+export async function createActividad(cursoId, data) {
+  return fetchWithFallback(`/api/cursos/${cursoId}/actividades`, {
+    method: 'POST',
+    body: JSON.stringify(data)
+  }, { ...data, id: Date.now(), cursoId });
+}
+
+// 10. Evaluaciones
+export async function getEvaluaciones() {
+  return fetchWithFallback('/api/evaluaciones', { method: 'GET' }, []);
+}
+
+export async function createEvaluacion(data) {
+  return fetchWithFallback('/api/evaluaciones', {
+    method: 'POST',
+    body: JSON.stringify(data)
+  }, { ...data, id: Date.now() });
+}
+
+// 11. Biblioteca
+export async function getBiblioteca() {
+  return fetchWithFallback('/api/biblioteca', { method: 'GET' }, []);
+}
+
+export async function createRecurso(data) {
+  return fetchWithFallback('/api/biblioteca', {
+    method: 'POST',
+    body: JSON.stringify(data)
+  }, { ...data, id: Date.now() });
+}
+
+// 12. Progreso del estudiante (vista docente)
+export async function getProgresoEstudiante(estudianteId) {
+  return fetchWithFallback(`/api/progreso/${estudianteId}`, { method: 'GET' }, []);
+}
+
+export async function saveProgreso(estudianteId, data) {
+  return fetchWithFallback(`/api/progreso/${estudianteId}`, {
+    method: 'POST',
+    body: JSON.stringify(data)
+  }, { ...data, estudianteId });
 }

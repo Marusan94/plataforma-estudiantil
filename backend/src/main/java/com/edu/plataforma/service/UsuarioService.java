@@ -13,7 +13,9 @@ import com.edu.plataforma.model.Usuario;
 import com.edu.plataforma.repository.DocenteRepository;
 import com.edu.plataforma.repository.EstudianteRepository;
 import com.edu.plataforma.repository.FamiliarRepository;
+import com.edu.plataforma.repository.ProgresoCursoRepository;
 import com.edu.plataforma.repository.UsuarioRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,15 +29,18 @@ public class UsuarioService {
     private final EstudianteRepository estudianteRepository;
     private final FamiliarRepository familiarRepository;
     private final DocenteRepository docenteRepository;
+    private final ProgresoCursoRepository progresoRepository;
 
     public UsuarioService(UsuarioRepository usuarioRepository,
                           EstudianteRepository estudianteRepository,
                           FamiliarRepository familiarRepository,
-                          DocenteRepository docenteRepository) {
+                          DocenteRepository docenteRepository,
+                          ProgresoCursoRepository progresoRepository) {
         this.usuarioRepository = usuarioRepository;
         this.estudianteRepository = estudianteRepository;
         this.familiarRepository = familiarRepository;
         this.docenteRepository = docenteRepository;
+        this.progresoRepository = progresoRepository;
     }
 
     @Transactional
@@ -124,12 +129,40 @@ public class UsuarioService {
         return toDTO(usuarioRepository.save(usuario));
     }
 
+    @Transactional(readOnly = true)
+    public UsuarioDTO login(String correo, String contrasena) {
+        Usuario usuario = usuarioRepository.findByCorreo(correo == null ? "" : correo.trim())
+                .orElseThrow(() -> new BadRequestException("Credenciales invalidas: correo o contrasena incorrectos"));
+        if (contrasena == null || !contrasena.equals(usuario.getContrasena())) {
+            throw new BadRequestException("Credenciales invalidas: correo o contrasena incorrectos");
+        }
+        if (!"ACTIVO".equalsIgnoreCase(usuario.getEstado())) {
+            throw new BadRequestException("Usuario inactivo. Contacte al administrador");
+        }
+        return toDTO(usuario);
+    }
+
     @Transactional
     public void eliminarUsuario(Long id) {
-        if (!usuarioRepository.existsById(id)) {
-            throw new UsuarioNoEncontradoException("Usuario no encontrado para eliminar con ID: " + id);
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new UsuarioNoEncontradoException("Usuario no encontrado para eliminar con ID: " + id));
+        try {
+            String rol = usuario.getRol() == null ? "" : usuario.getRol().toUpperCase();
+            if ("ESTUDIANTE".equals(rol)) {
+                estudianteRepository.findByUsuarioId(id).ifPresent(est -> {
+                    progresoRepository.findByEstudianteId(est.getId())
+                            .forEach(p -> progresoRepository.deleteById(p.getId()));
+                    estudianteRepository.deleteById(est.getId());
+                });
+            } else if ("DOCENTE".equals(rol)) {
+                docenteRepository.findByUsuarioId(id).ifPresent(d -> docenteRepository.deleteById(d.getId()));
+            } else if ("FAMILIAR".equals(rol)) {
+                familiarRepository.findByUsuarioId(id).ifPresent(f -> familiarRepository.deleteById(f.getId()));
+            }
+            usuarioRepository.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new BadRequestException("No se puede eliminar: el usuario tiene historial academico asociado (notas, asistencias o matriculas)");
         }
-        usuarioRepository.deleteById(id);
     }
 
     public UsuarioDTO toDTO(Usuario u) {

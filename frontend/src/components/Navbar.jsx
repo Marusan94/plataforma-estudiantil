@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-export default function Navbar({ currentRole, onRoleChange, activeTab, onTabChange, theme, onToggleTheme, onLogout }) {
+export default function Navbar({ currentRole, onRoleChange, activeTab, onTabChange, theme, onToggleTheme, onLogout, sessionUser, demoMode }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
@@ -12,13 +12,28 @@ export default function Navbar({ currentRole, onRoleChange, activeTab, onTabChan
     { id: 'ADMIN', name: 'Rectoría / Control Central', roleLabel: 'Administrador SaaS', initials: 'AD', email: 'admin@rectoria.edu.co' }
   ];
 
-  const currentPersona = personas.find(p => p.id === currentRole) || personas[0];
+  const roleLabels = { ESTUDIANTE: 'Estudiante', DOCENTE: 'Docente Titular', FAMILIAR: 'Acudiente', BIENESTAR: 'Bienestar Institucional', ADMIN: 'Administrador' };
+  const initialsOf = (name) => (name || '?').trim().split(/\s+/).slice(0, 2).map(w => w[0].toUpperCase()).join('');
+
+  const currentPersona = demoMode
+    ? (personas.find(p => p.id === currentRole) || personas[0])
+    : {
+        id: currentRole,
+        name: (sessionUser && sessionUser.nombre) || 'Mi cuenta',
+        roleLabel: roleLabels[currentRole] || currentRole,
+        initials: initialsOf(sessionUser && sessionUser.nombre),
+        email: (sessionUser && sessionUser.correo) || ''
+      };
 
   const allTabs = [
     { id: 'dashboard', label: 'Dashboard' },
     { id: 'lab-digital', label: 'Lab Digital' },
     { id: 'hoja-vida', label: 'Hoja de Vida' },
     { id: 'academico', label: 'Académico' },
+    { id: 'cursos', label: 'Cursos' },
+    { id: 'evaluaciones', label: 'Evaluaciones' },
+    { id: 'biblioteca', label: 'Biblioteca' },
+    { id: 'docente', label: 'Docente' },
     { id: 'asistencia', label: 'Asistencia' },
     { id: 'bienestar', label: 'Bienestar' },
     { id: 'familiar', label: 'Familiar' },
@@ -27,11 +42,11 @@ export default function Navbar({ currentRole, onRoleChange, activeTab, onTabChan
   ];
 
   const roleTabs = {
-    ESTUDIANTE: ['dashboard', 'lab-digital', 'hoja-vida', 'academico', 'asistencia', 'bienestar', 'portfolio'],
-    DOCENTE: ['dashboard', 'lab-digital', 'academico', 'asistencia', 'bienestar', 'registro', 'portfolio'],
+    ESTUDIANTE: ['dashboard', 'lab-digital', 'hoja-vida', 'academico', 'cursos', 'evaluaciones', 'biblioteca', 'asistencia', 'bienestar', 'portfolio'],
+    DOCENTE: ['dashboard', 'lab-digital', 'academico', 'cursos', 'evaluaciones', 'biblioteca', 'docente', 'asistencia', 'bienestar', 'registro', 'portfolio'],
     FAMILIAR: ['dashboard', 'familiar', 'bienestar', 'portfolio'],
     BIENESTAR: ['dashboard', 'bienestar', 'asistencia', 'registro', 'portfolio'],
-    ADMIN: ['dashboard', 'lab-digital', 'hoja-vida', 'academico', 'asistencia', 'bienestar', 'familiar', 'registro', 'portfolio']
+    ADMIN: ['dashboard', 'lab-digital', 'hoja-vida', 'academico', 'cursos', 'evaluaciones', 'biblioteca', 'docente', 'asistencia', 'bienestar', 'familiar', 'registro', 'portfolio']
   };
 
   const tabs = allTabs.filter(t => roleTabs[currentRole]?.includes(t.id));
@@ -68,6 +83,11 @@ export default function Navbar({ currentRole, onRoleChange, activeTab, onTabChan
           <span className="brand-text">
             <span className="brand-title">EDU.CORE</span>
             <span className="brand-tag">Campus Central</span>
+            {demoMode && (
+              <span className="brand-tag" style={{ background: 'var(--warning, #d97706)', color: '#fff', marginLeft: 6 }}>
+                MODO PRUEBA
+              </span>
+            )}
           </span>
         </div>
 
@@ -105,9 +125,10 @@ export default function Navbar({ currentRole, onRoleChange, activeTab, onTabChan
                 </div>
 
                 <div className="dropdown-section-title">
-                  Modo Demostración / Cambiar Rol:
+                  {demoMode ? 'Modo Demostración / Cambiar Rol:' : 'Sesión activa:'}
                 </div>
 
+                {demoMode ? (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                   {personas.map(p => (
                     <button
@@ -124,6 +145,11 @@ export default function Navbar({ currentRole, onRoleChange, activeTab, onTabChan
                     </button>
                   ))}
                 </div>
+                ) : (
+                <div style={{ fontSize: 11.5, color: 'var(--mute)', padding: '2px 2px 4px' }}>
+                  Entraste con tu cuenta de {currentPersona.roleLabel}. Para explorar otros roles usa el modo prueba desde el inicio.
+                </div>
+                )}
 
                 <div style={{ borderTop: '1px solid var(--hairline)', marginTop: 8, paddingTop: 8 }}>
                   <button

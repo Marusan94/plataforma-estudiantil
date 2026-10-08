@@ -83,30 +83,22 @@ const certifications = [
 
 export default function PublicPortfolio() {
   const [activeFilter, setActiveFilter] = useState('all');
-  const [theme, setTheme] = useState(() => localStorage.getItem('portfolio_theme') || 'lovecraft');
+  const [theme, setTheme] = useState('dark');
 
   const allTags = [...new Set(portfolioData.flatMap(p => p.tags))];
 
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('portfolio_theme', theme);
-    document.body.classList.toggle('lovecraft-bg', theme === 'lovecraft');
-  }, [theme]);
+    document.documentElement.setAttribute('data-theme', 'dark');
+    localStorage.setItem('portfolio_theme', 'dark');
+    document.body.classList.remove('lovecraft-bg');
+  }, []);
 
   const filteredProjects = activeFilter === 'all'
     ? portfolioData
     : portfolioData.filter(p => p.tags.includes(activeFilter));
 
   return (
-    <div className="portfolio-root" data-theme={theme}>
-      {theme === 'lovecraft' && (
-        <>
-          <div className="lovecraft-bg" />
-          <div className="scanlines" />
-          <div className="crt-vignette" />
-        </>
-      )}
-
+    <div className="portfolio-root" data-theme="dark">
       <header className="portfolio-header">
         <div className="portfolio-header-inner">
           <div className="portfolio-brand">
@@ -132,13 +124,6 @@ export default function PublicPortfolio() {
           </div>
 
           <div className="portfolio-header-actions">
-            <button
-              onClick={() => setTheme(theme === 'lovecraft' ? 'dark' : 'lovecraft')}
-              className="theme-lovecraft-toggle"
-              aria-label={theme === 'lovecraft' ? 'Modo Normal' : 'Modo Lovecraftiano'}
-            >
-              {theme === 'lovecraft' ? '🌙 NORMAL' : '👁️ LOVECRAFT'}
-            </button>
             <a
               href="mailto:santiago.perez@estudiante.edu.co"
               className="btn-eldritch"

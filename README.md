@@ -249,7 +249,7 @@ Scripts en `scripts/` + salidas en `reports/` y `data/`. El CI solo valida `py_c
 | Lab Digital ticket | ![Lab Digital](docs/screenshots/lab-ticket.png) |
 | Hoja de Vida + exporte | ![Hoja de Vida](docs/screenshots/hoja-vida.png) |
 
-> Para generarlas: abre https://educore-frontend-co5c.onrender.com, captura 1366x768 (dashboard, ticket abierto, hoja de vida) y guarda en `docs/screenshots/`.
+> Capturadas con Playwright (1366×768) del demo vivo https://educore-frontend-co5c.onrender.com
 
 ## Demo en video
 
